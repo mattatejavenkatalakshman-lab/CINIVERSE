@@ -1,0 +1,2372 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CINEVERSE — Discover. Explore. Experience Cinema.</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Google Fonts: Inter & Plus Jakarta Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        cinema: {
+                            bg: '#09090f',
+                            surface: '#12121c',
+                            card: '#181826',
+                            border: '#27273a',
+                            purple: '#8b5cf6',
+                            blue: '#3b82f6',
+                            accent: '#6366f1'
+                        }
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'fade-in': 'fadeIn 0.35s ease-out forwards',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(8px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #09090f;
+            color: #f3f4f6;
+            overflow-x: hidden;
+        }
+
+        /* Custom sleek scrollbars */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #09090f;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #27273a;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #6366f1;
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .glass-nav {
+            background: rgba(9, 9, 15, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .hero-gradient {
+            background: linear-gradient(to top, #09090f 8%, rgba(9, 9, 15, 0.7) 55%, rgba(9, 9, 15, 0.25) 100%),
+                        linear-gradient(to right, #09090f 15%, rgba(9, 9, 15, 0.4) 65%, transparent 100%);
+        }
+
+        .poster-hover {
+            transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease;
+        }
+        .poster-hover:hover {
+            transform: translateY(-6px) scale(1.02);
+            box-shadow: 0 20px 30px -10px rgba(99, 102, 241, 0.25);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #a78bfa 0%, #60a5fa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .gradient-btn {
+            background: linear-gradient(135deg, #7c3aed 0%, #2563eb 100%);
+            transition: all 0.25s ease;
+        }
+        .gradient-btn:hover {
+            filter: brightness(1.12);
+            box-shadow: 0 8px 20px -4px rgba(124, 58, 237, 0.5);
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-purple-600 selection:text-white">
+
+    <!-- ==================== TOP NAVIGATION BAR ==================== -->
+    <header class="fixed top-0 left-0 right-0 z-50 glass-nav">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 md:h-20 gap-3">
+                <!-- Logo -->
+                <div class="flex items-center gap-6">
+                    <button onclick="navigate('home')" class="flex items-center gap-2.5 group focus:outline-none">
+                        <div class="w-9 h-9 rounded-xl gradient-btn flex items-center justify-center text-white shadow-lg">
+                            <i class="fa-solid fa-film text-lg"></i>
+                        </div>
+                        <div class="text-left">
+                            <span class="font-display font-extrabold text-xl tracking-wider text-white block leading-none">CINEVERSE</span>
+                            <span class="text-[10px] text-purple-400 tracking-widest uppercase font-semibold hidden sm:block">Cinema Discovery</span>
+                        </div>
+                    </button>
+
+                    <!-- Desktop Nav Links -->
+                    <nav class="hidden lg:flex items-center space-x-1">
+                        <button onclick="navigate('home')" data-nav="home" class="nav-link px-3 py-2 rounded-xl text-sm font-medium text-white bg-white/10">Home</button>
+                        <button onclick="navigate('discover', {type: 'movie'})" data-nav="movies" class="nav-link px-3 py-2 rounded-xl text-sm font-medium text-gray-300 hover:text-white hover:bg-white/5 transition">Movies</button>
+                        <button onclick="navigate('discover', {type: 'tv'})" data-nav="tv" class="nav-link px-3 py-2 rounded-xl text-sm font-medium text-gray-300 hover:text-white hover:bg-white/5 transition">TV Shows</button>
+                        <button onclick="navigate('actors')" data-nav="actors" class="nav-link px-3 py-2 rounded-xl text-sm font-medium text-gray-300 hover:text-white hover:bg-white/5 transition">Actors</button>
+                        <button onclick="navigate('tools')" data-nav="tools" class="nav-link px-3 py-2 rounded-xl text-sm font-medium text-gray-300 hover:text-white hover:bg-white/5 transition flex items-center gap-1.5">
+                            <i class="fa-solid fa-wand-magic-sparkles text-purple-400 text-xs"></i> AI & Tools
+                        </button>
+                        <button onclick="navigate('about')" data-nav="about" class="nav-link px-3 py-2 rounded-xl text-sm font-medium text-gray-300 hover:text-white hover:bg-white/5 transition">Architecture</button>
+                    </nav>
+                </div>
+
+                <!-- Live Search Bar -->
+                <div class="relative flex-1 max-w-md">
+                    <div class="relative flex items-center">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3.5 text-gray-400 text-sm"></i>
+                        <input
+                            type="text"
+                            id="global-search-input"
+                            placeholder="Search movies, TV, actors, Bollywood, K-Drama..."
+                            autocomplete="off"
+                            class="w-full bg-cinema-surface/90 border border-cinema-border focus:border-purple-500 rounded-2xl pl-10 pr-20 py-2 text-sm text-white placeholder-gray-400 focus:outline-none transition"
+                        />
+                        <button onclick="executeFullSearch()" class="absolute right-1.5 px-2.5 py-1 bg-purple-600/80 hover:bg-purple-600 text-xs font-semibold rounded-xl text-white transition">
+                            Search
+                        </button>
+                    </div>
+
+                    <!-- Live Search Suggestions & History Dropdown -->
+                    <div id="search-dropdown" class="hidden absolute left-0 right-0 mt-2 bg-cinema-card border border-cinema-border rounded-2xl shadow-2xl overflow-hidden z-50 max-h-[75vh] overflow-y-auto">
+                        <div id="search-dropdown-content" class="p-3"></div>
+                    </div>
+                </div>
+
+                <!-- Right Action Buttons -->
+                <div class="flex items-center gap-2">
+                    <!-- TMDB API Key Status Pill -->
+                    <button onclick="openModal('api-modal')" title="Configure Live TMDB API Key" class="hidden sm:flex items-center gap-1.5 px-3 py-2 rounded-xl bg-cinema-surface border border-cinema-border hover:border-purple-500/60 text-xs font-medium text-gray-300 transition">
+                        <span id="api-status-dot" class="w-2 h-2 rounded-full bg-amber-400"></span>
+                        <span id="api-status-text">API Setup</span>
+                    </button>
+
+                    <!-- Watchlist Quick Button -->
+                    <button onclick="navigate('watchlist')" class="relative p-2.5 rounded-xl bg-cinema-surface border border-cinema-border hover:border-purple-500/60 text-gray-200 transition" title="My Watchlist & Collections">
+                        <i class="fa-solid fa-bookmark text-purple-400"></i>
+                        <span id="watchlist-badge" class="absolute -top-1.5 -right-1.5 bg-purple-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">0</span>
+                    </button>
+
+                    <!-- User Profile / Auth Button -->
+                    <div id="auth-header-slot">
+                        <button onclick="openModal('auth-modal')" class="gradient-btn px-4 py-2 rounded-xl text-sm font-semibold text-white shadow">
+                            Sign In
+                        </button>
+                    </div>
+
+                    <!-- Mobile Menu Toggle -->
+                    <button onclick="toggleMobileMenu()" class="lg:hidden p-2.5 rounded-xl bg-cinema-surface border border-cinema-border text-gray-200">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Drawer -->
+        <div id="mobile-menu" class="hidden lg:hidden bg-cinema-surface border-t border-cinema-border px-4 py-4 space-y-2">
+            <div class="grid grid-cols-2 gap-2">
+                <button onclick="navigate('home'); toggleMobileMenu()" class="p-3 rounded-xl bg-cinema-card text-left text-sm font-medium text-white"><i class="fa-solid fa-house mr-2 text-purple-400"></i>Home</button>
+                <button onclick="navigate('discover', {type: 'movie'}); toggleMobileMenu()" class="p-3 rounded-xl bg-cinema-card text-left text-sm font-medium text-white"><i class="fa-solid fa-clapperboard mr-2 text-blue-400"></i>Movies</button>
+                <button onclick="navigate('discover', {type: 'tv'}); toggleMobileMenu()" class="p-3 rounded-xl bg-cinema-card text-left text-sm font-medium text-white"><i class="fa-solid fa-tv mr-2 text-purple-400"></i>TV Shows</button>
+                <button onclick="navigate('actors'); toggleMobileMenu()" class="p-3 rounded-xl bg-cinema-card text-left text-sm font-medium text-white"><i class="fa-solid fa-user-astronaut mr-2 text-blue-400"></i>Actors</button>
+                <button onclick="navigate('tools'); toggleMobileMenu()" class="p-3 rounded-xl bg-cinema-card text-left text-sm font-medium text-white"><i class="fa-solid fa-wand-magic-sparkles mr-2 text-purple-400"></i>AI & Discovery</button>
+                <button onclick="navigate('watchlist'); toggleMobileMenu()" class="p-3 rounded-xl bg-cinema-card text-left text-sm font-medium text-white"><i class="fa-solid fa-bookmark mr-2 text-blue-400"></i>Watchlist</button>
+                <button onclick="openModal('api-modal'); toggleMobileMenu()" class="p-3 rounded-xl bg-cinema-card text-left text-sm font-medium text-amber-300"><i class="fa-solid fa-key mr-2"></i>TMDB API Key</button>
+                <button onclick="navigate('about'); toggleMobileMenu()" class="p-3 rounded-xl bg-cinema-card text-left text-sm font-medium text-gray-300"><i class="fa-solid fa-server mr-2"></i>Full-Stack Docs</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ==================== TOAST NOTIFICATION CONTAINER ==================== -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-[100] flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- ==================== MAIN DYNAMIC VIEWPORT ==================== -->
+    <main id="app-root" class="pt-16 md:pt-20 min-h-screen">
+        <!-- Views are dynamically injected here -->
+    </main>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="bg-cinema-surface border-t border-cinema-border mt-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div class="col-span-1 md:col-span-2">
+                    <div class="flex items-center gap-2.5 mb-3">
+                        <div class="w-8 h-8 rounded-xl gradient-btn flex items-center justify-center text-white">
+                            <i class="fa-solid fa-film"></i>
+                        </div>
+                        <span class="font-display font-extrabold text-xl tracking-wider text-white">CINEVERSE</span>
+                    </div>
+                    <p class="text-sm text-gray-400 max-w-md leading-relaxed">
+                        <strong>Discover. Explore. Experience Cinema.</strong> Global cinema discovery across Hollywood, Bollywood, Tollywood, Kollywood, Korean, and Japanese film industries. Powered by TMDB metadata & Gemini AI recommendations.
+                    </p>
+                    <p class="text-xs text-gray-500 mt-3">
+                        Disclaimer: CINEVERSE is a legal movie metadata & discovery platform. We do not host or stream copyrighted full-length films.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="font-display font-bold text-white text-sm uppercase tracking-wider mb-3">Explore Industries</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><button onclick="navigate('discover', {industry: 'hollywood'})" class="hover:text-purple-400 transition">Hollywood Cinema</button></li>
+                        <li><button onclick="navigate('discover', {industry: 'bollywood'})" class="hover:text-purple-400 transition">Bollywood (Hindi)</button></li>
+                        <li><button onclick="navigate('discover', {industry: 'tollywood'})" class="hover:text-purple-400 transition">Tollywood (Telugu)</button></li>
+                        <li><button onclick="navigate('discover', {industry: 'korean'})" class="hover:text-purple-400 transition">Korean Cinema & K-Drama</button></li>
+                        <li><button onclick="navigate('discover', {industry: 'japanese'})" class="hover:text-purple-400 transition">Japanese Cinema & Anime</button></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-display font-bold text-white text-sm uppercase tracking-wider mb-3">Platform & Tools</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><button onclick="navigate('tools')" class="hover:text-blue-400 transition">AI Cinema Assistant</button></li>
+                        <li><button onclick="navigate('tools')" class="hover:text-blue-400 transition">Movie Comparison Engine</button></li>
+                        <li><button onclick="navigate('admin')" class="hover:text-blue-400 transition">Admin Dashboard</button></li>
+                        <li><button onclick="openModal('api-modal')" class="hover:text-blue-400 transition">Configure TMDB API</button></li>
+                        <li><button onclick="navigate('about')" class="hover:text-blue-400 transition">Backend & DB Blueprint</button></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-cinema-border mt-8 pt-6 flex flex-col sm:flex-row justify-between items-center text-xs text-gray-500 gap-4">
+                <span>&copy; 2026 CINEVERSE Ultimate Movie Information Platform. All rights reserved.</span>
+                <span>Metadata & Artwork provided via TMDB API & Official YouTube Trailers.</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ==================== MODALS ==================== -->
+
+    <!-- 1. Trailer Player Modal -->
+    <div id="trailer-modal" class="hidden fixed inset-0 z-[80] bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="bg-cinema-card border border-cinema-border rounded-3xl w-full max-w-4xl overflow-hidden shadow-2xl animate-fade-in">
+            <div class="flex items-center justify-between px-6 py-4 border-b border-cinema-border">
+                <h3 id="trailer-modal-title" class="font-display font-bold text-white text-lg truncate">Official Trailer</h3>
+                <button onclick="closeModal('trailer-modal')" class="w-9 h-9 rounded-xl bg-white/5 hover:bg-white/15 flex items-center justify-center text-gray-300">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="aspect-video bg-black w-full" id="trailer-player-container">
+                <!-- YouTube iframe injected here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. TMDB API Configuration Modal -->
+    <div id="api-modal" class="hidden fixed inset-0 z-[80] bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="bg-cinema-card border border-cinema-border rounded-3xl w-full max-w-lg p-6 sm:p-8 shadow-2xl animate-fade-in">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-10 h-10 rounded-xl bg-purple-600/20 border border-purple-500/40 flex items-center justify-center text-purple-400">
+                        <i class="fa-solid fa-key"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-display font-bold text-white text-lg">TMDB Live API Integration</h3>
+                        <p class="text-xs text-gray-400">Connect real-time global movie & TV metadata</p>
+                    </div>
+                </div>
+                <button onclick="closeModal('api-modal')" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <p class="text-sm text-gray-300 mb-4 leading-relaxed">
+                CINEVERSE works right out of the box with curated global cinema data. To unlock live queries across <strong>900,000+ movies, TV shows, and actors</strong>, paste your free TMDB v3 API Key below:
+            </p>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-1.5">TMDB API Key (v3 auth)</label>
+                    <input type="text" id="tmdb-key-input" placeholder="e.g. 8c247ea0b4b56ed2ff7d41c9a833aa77" class="w-full bg-cinema-surface border border-cinema-border focus:border-purple-500 rounded-xl px-4 py-3 text-sm text-white focus:outline-none">
+                </div>
+                <div class="bg-cinema-surface/80 border border-cinema-border rounded-xl p-3 text-xs text-gray-400 space-y-1">
+                    <p class="font-semibold text-gray-200">How to get a free key in 60 seconds:</p>
+                    <p>1. Create a free account at <span class="text-blue-400">themoviedb.org</span></p>
+                    <p>2. Go to <strong>Settings &rarr; API &rarr; Request an API Key (Developer)</strong></p>
+                    <p>3. Copy the <strong>API Key (v3 auth)</strong> and click Save below.</p>
+                </div>
+                <div class="flex items-center justify-end gap-3 pt-2">
+                    <button onclick="clearTmdbKey()" class="px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-xs font-semibold text-gray-300">Use Curated Mode</button>
+                    <button onclick="saveTmdbKey()" class="gradient-btn px-5 py-2.5 rounded-xl text-sm font-semibold text-white">Save & Fetch Live Data</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. Authentication Modal (Login / Register / Forgot Password) -->
+    <div id="auth-modal" class="hidden fixed inset-0 z-[80] bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="bg-cinema-card border border-cinema-border rounded-3xl w-full max-w-md p-6 sm:p-8 shadow-2xl animate-fade-in">
+            <div class="flex justify-between items-center mb-6">
+                <div class="flex gap-2 bg-cinema-surface p-1 rounded-xl border border-cinema-border">
+                    <button id="tab-login" onclick="switchAuthTab('login')" class="px-4 py-1.5 rounded-lg text-xs font-bold bg-purple-600 text-white">Login</button>
+                    <button id="tab-register" onclick="switchAuthTab('register')" class="px-4 py-1.5 rounded-lg text-xs font-bold text-gray-400 hover:text-white">Sign Up</button>
+                </div>
+                <button onclick="closeModal('auth-modal')" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+
+            <form id="auth-form" onsubmit="handleAuthSubmit(event)" class="space-y-4">
+                <div id="auth-name-field" class="hidden">
+                    <label class="block text-xs font-semibold text-gray-400 mb-1">Full Name</label>
+                    <input type="text" id="auth-name" placeholder="Arjun Sharma" class="w-full bg-cinema-surface border border-cinema-border rounded-xl px-4 py-2.5 text-sm text-white focus:border-purple-500 focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-400 mb-1">Email Address</label>
+                    <input type="email" id="auth-email" required placeholder="cinephile@cineverse.io" class="w-full bg-cinema-surface border border-cinema-border rounded-xl px-4 py-2.5 text-sm text-white focus:border-purple-500 focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-400 mb-1">Password</label>
+                    <input type="password" id="auth-password" required placeholder="••••••••" class="w-full bg-cinema-surface border border-cinema-border rounded-xl px-4 py-2.5 text-sm text-white focus:border-purple-500 focus:outline-none">
+                </div>
+                <div class="flex items-center justify-between text-xs">
+                    <button type="button" onclick="triggerForgotPassword()" class="text-purple-400 hover:underline">Forgot password?</button>
+                    <button type="button" onclick="quickAdminDemoLogin()" class="text-blue-400 hover:underline">Demo Admin Login</button>
+                </div>
+                <button type="submit" id="auth-submit-btn" class="w-full gradient-btn py-3 rounded-xl text-sm font-bold text-white shadow-lg">
+                    Sign In to CINEVERSE
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ==================== APPLICATION LOGIC ==================== -->
+    <script>
+        /**
+         * CINEVERSE CORE STATE & DATA ENGINE
+         * Supports live TMDB v3 API calls with intelligent caching, retry logic,
+         * and rich multi-industry fallback cinema datasets (Hollywood, Bollywood, Tollywood, Korean, Japanese).
+         */
+        const STATE = {
+            tmdbKey: '',
+            currentView: 'home',
+            viewParams: {},
+            cache: new Map(),
+            user: {
+                id: 'usr_demo_01',
+                name: 'Alex Mercer',
+                email: 'alex@cineverse.io',
+                role: 'admin', // 'user' or 'admin'
+                avatar: 'AM',
+                bio: 'Sci-Fi enthusiast, Tollywood & Korean thriller aficionado.'
+            },
+            isAuthenticated: true, // Pre-logged in for seamless exploration; users can log out or switch accounts
+            watchlist: [
+                { id: 157336, title: 'Interstellar', media_type: 'movie', year: '2014', rating: 8.4, poster: 'https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg', genre: 'Sci-Fi', watched: true, personalRating: 10 },
+                { id: 872585, title: 'Oppenheimer', media_type: 'movie', year: '2023', rating: 8.1, poster: 'https://image.tmdb.org/t/p/w500/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg', genre: 'Drama', watched: false, personalRating: null },
+                { id: 579974, title: 'RRR', media_type: 'movie', year: '2022', rating: 7.8, poster: 'https://image.tmdb.org/t/p/w500/nEufeZlyAOLqO2brrs0yeF1lgXO.jpg', genre: 'Action', watched: true, personalRating: 9 }
+            ],
+            collections: [
+                { id: 'col_1', name: 'Mind-Bending Sci-Fi', movieIds: [157336, 27205, 693134] },
+                { id: 'col_2', name: 'Indian Pan-India Blockbusters', movieIds: [579974, 783461, 872906] }
+            ],
+            reviews: [
+                { id: 'rev_1', movieId: 157336, movieTitle: 'Interstellar', userId: 'usr_demo_01', userName: 'Alex Mercer', rating: 10, text: 'Hans Zimmer’s organ score paired with Christopher Nolan’s emotional core makes this an unforgettable theatrical masterpiece.', date: '2026-10-14' },
+                { id: 'rev_2', movieId: 579974, movieTitle: 'RRR', userId: 'usr_priya', userName: 'Priya Nair', rating: 9, text: 'Pure big-screen euphoria! SS Rajamouli choreographs action set-pieces like operatic poetry.', date: '2026-11-02' },
+                { id: 'rev_3', movieId: 496243, movieTitle: 'Parasite', userId: 'usr_jin', userName: 'Jin-Woo Park', rating: 10, text: 'Razor-sharp social satire that shifts tones effortlessly from dark comedy to breathless thriller.', date: '2026-11-18' }
+            ],
+            searchHistory: ['Interstellar', 'RRR', 'Christopher Nolan', 'Parasite', 'Jawan'],
+            recentlyViewed: [],
+            compareSelection: [157336, 27205],
+            activityLogs: [
+                { time: 'Just now', event: 'System initialized with TMDB & Gemini AI engines' },
+                { time: '2 mins ago', event: 'User Alex Mercer added "Oppenheimer" to Watchlist' },
+                { time: '14 mins ago', event: 'New review posted on "Parasite" (10/10)' }
+            ]
+        };
+
+        // Genre ID Map (TMDB Standard)
+        const GENRES = {
+            28: 'Action', 12: 'Adventure', 16: 'Animation', 35: 'Comedy', 80: 'Crime',
+            99: 'Documentary', 18: 'Drama', 10751: 'Family', 14: 'Fantasy', 36: 'History',
+            27: 'Horror', 10402: 'Music', 9648: 'Mystery', 10749: 'Romance', 878: 'Sci-Fi',
+            53: 'Thriller', 10752: 'War', 37: 'Western', 10759: 'Action & Adventure', 10765: 'Sci-Fi & Fantasy'
+        };
+
+        // Rich Curated Global Cinema Dataset (Used immediately & as seamless fallback if TMDB API is offline/unconfigured)
+        const CURATED_CATALOG = [
+            {
+                id: 693134, media_type: 'movie', title: 'Dune: Part Two', original_title: 'Dune: Part Two',
+                release_date: '2024-02-27', vote_average: 8.3, runtime: 166, original_language: 'en', industry: 'hollywood',
+                genres: ['Sci-Fi', 'Adventure'], budget: 190000000, revenue: 714400000, imdb_id: 'tt15239678',
+                poster: 'https://image.tmdb.org/t/p/w500/1pdfLvkbY9ohJlCjQH2CZjjYVvJ.jpg',
+                backdrop: 'https://image.tmdb.org/t/p/original/xOMo8BRK7PfcJv9JCnx7s5hj0PX.jpg',
+                overview: 'Follow the mythic journey of Paul Atreides as he unites with Chani and the Fremen while on a warpath of revenge against the conspirators who destroyed his family.',
+                director: 'Denis Villeneuve', writers: ['Denis Villeneuve', 'Jon Spaihts'],
+                production: ['Legendary Pictures', 'Warner Bros. Pictures'],
+                trailerKey: 'Way9Dexny3w',
+                cast: [
+                    { id: 1190668, name: 'Timothée Chalamet', character: 'Paul Atreides', profile: 'https://image.tmdb.org/t/p/w300/BE2sdjpgsa2rNTFa66f7upkaOP.jpg' },
+                    { id: 505710, name: 'Zendaya', character: 'Chani', profile: 'https://image.tmdb.org/t/p/w300/cbCibv222k3g1x1d2yL8t8C4yA.jpg' },
+                    { id: 933238, name: 'Rebecca Ferguson', character: 'Lady Jessica', profile: 'https://image.tmdb.org/t/p/w300/lJloTOheuQSirSLXNA3JHsrMNfH.jpg' },
+                    { id: 17142, name: 'Javier Bardem', character: 'Stilgar', profile: 'https://image.tmdb.org/t/p/w300/e3x9w3g2z5x1b1a0c0d0e0f0g0.jpg' }
+                ]
+            },
+            {
+                id: 157336, media_type: 'movie', title: 'Interstellar', original_title: 'Interstellar',
+                release_date: '2014-11-05', vote_average: 8.4, runtime: 169, original_language: 'en', industry: 'hollywood',
+                genres: ['Adventure', 'Drama', 'Sci-Fi'], budget: 165000000, revenue: 731000000, imdb_id: 'tt0816692',
+                poster: 'https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg',
+                backdrop: 'https://image.tmdb.org/t/p/original/xJHokMbljvjADYdit5fK5VQsXEG.jpg',
+                overview: 'The adventures of a group of explorers who make use of a newly discovered wormhole to surpass the limitations on human space travel and conquer the vast distances involved in an interstellar voyage.',
+                director: 'Christopher Nolan', writers: ['Jonathan Nolan', 'Christopher Nolan'],
+                production: ['Legendary Pictures', 'Syncopy', 'Lynda Obst Productions'],
+                trailerKey: 'zSWdZVtXT7E',
+                cast: [
+                    { id: 10297, name: 'Matthew McConaughey', character: 'Cooper', profile: 'https://image.tmdb.org/t/p/w300/e9ZHRY5toiBZEy6XkBrxfqoZ2L3.jpg' },
+                    { id: 1813, name: 'Anne Hathaway', character: 'Brand', profile: 'https://image.tmdb.org/t/p/w300/tLelKoPNiyJCSEtQTz1FGv4TLGc.jpg' },
+                    { id: 83002, name: 'Jessica Chastain', character: 'Murph', profile: 'https://image.tmdb.org/t/p/w300/lodMzLufmvSVejGCSmk78260R5.jpg' }
+                ]
+            },
+            {
+                id: 579974, media_type: 'movie', title: 'RRR', original_title: 'రౌద్రం రణం రుధిరం',
+                release_date: '2022-03-24', vote_average: 7.8, runtime: 187, original_language: 'te', industry: 'tollywood',
+                genres: ['Action', 'Drama'], budget: 72000000, revenue: 160000000, imdb_id: 'tt8178634',
+                poster: 'https://image.tmdb.org/t/p/w500/nEufeZlyAOLqO2brrs0yeF1lgXO.jpg',
+                backdrop: 'https://image.tmdb.org/t/p/original/i0Y0wP8H6SRgjr6QmuwbtQbS24D.jpg',
+                overview: 'A fictional history of two legendary revolutionaries away from home before they began fighting for their country in the 1920s.',
+                director: 'S. S. Rajamouli', writers: ['V. Vijayendra Prasad', 'S. S. Rajamouli'],
+                production: ['DVV Entertainment'],
+                trailerKey: 'f_vbAtFSEc0',
+                cast: [
+                    { id: 147023, name: 'N. T. Rama Rao Jr.', character: 'Komaram Bheem', profile: 'https://image.tmdb.org/t/p/w300/4v4w2x1z3y5a7b9c1d3e5f7g9h.jpg' },
+                    { id: 147024, name: 'Ram Charan', character: 'Alluri Sitarama Raju', profile: 'https://image.tmdb.org/t/p/w300/mN8p2q4r6s8t0u2v4w6x8y0z2a.jpg' },
+                    { id: 1108120, name: 'Alia Bhatt', character: 'Sita', profile: 'https://image.tmdb.org/t/p/w300/RBnTJPegPFLIi4fwg23g6Z24Z1.jpg' }
+                ]
+            },
+            {
+                id: 496243, media_type: 'movie', title: 'Parasite', original_title: '기생충',
+                release_date: '2019-05-30', vote_average: 8.5, runtime: 133, original_language: 'ko', industry: 'korean',
+                genres: ['Comedy', 'Thriller', 'Drama'], budget: 11363000, revenue: 257591776, imdb_id: 'tt6751668',
+                poster: 'https://image.tmdb.org/t/p/w500/7IiTTgloJzvGI1TAYymCfbfl3vT.jpg',
+                backdrop: 'https://image.tmdb.org/t/p/original/TU9NIjwzjoKPwQHoHshkFcQUCG.jpg',
+                overview: 'All unemployed, Ki-taek’s family takes peculiar interest in the wealthy and glamorous Parks for their livelihood until they get entangled in an unexpected incident.',
+                director: 'Bong Joon-ho', writers: ['Bong Joon-ho', 'Han Jin-won'],
+                production: ['Barunson E&A'],
+                trailerKey: '5xH0HfJHsaY',
+                cast: [
+                    { id: 20738, name: 'Song Kang-ho', character: 'Kim Ki-taek', profile: 'https://image.tmdb.org/t/p/w300/7dw9w2M443652222333444555.jpg' },
+                    { id: 1255881, name: 'Choi Woo-shik', character: 'Kim Ki-woo', profile: 'https://image.tmdb.org/t/p/w300/b1c2d3e4f5g6h7i8j9k0l1m2n3.jpg' }
+                ]
+            },
+            {
+                id: 872906, media_type: 'movie', title: 'Jawan', original_title: 'जवान',
+                release_date: '2023-09-07', vote_average: 7.3, runtime: 169, original_language: 'hi', industry: 'bollywood',
+                genres: ['Action', 'Thriller'], budget: 36000000, revenue: 140000000, imdb_id: 'tt15354916',
+                poster: 'https://image.tmdb.org/t/p/w500/jFt1gS4BGHlK8xt76Y81Alp4dbt.jpg',
+                backdrop: 'https://image.tmdb.org/t/p/original/ctMserH8g2SeOAnCw5gFjdQF8mo.jpg',
+                overview: 'A high-octane action thriller which outlines the emotional journey of a man who is set to rectify the wrongs in the society.',
+                director: 'Atlee', writers: ['Atlee', 'S. Ramanagirivasan'],
+                production: ['Red Chillies Entertainment'],
+                trailerKey: 'COv52Qyctws',
+                cast: [
+                    { id: 35742, name: 'Shah Rukh Khan', character: 'Vikram Rathore / Azad', profile: 'https://image.tmdb.org/t/p/w300/tZ2222333444555666777888.jpg' },
+                    { id: 141702, name: 'Nayanthara', character: 'Narmada Rai', profile: 'https://image.tmdb.org/t/p/w300/wX9y0z1a2b3c4d5e6f7g8h9i0j.jpg' }
+                ]
+            },
+            {
+                id: 129, media_type: 'movie', title: 'Spirited Away', original_title: '千と千尋の神隠し',
+                release_date: '2001-07-20', vote_average: 8.5, runtime: 125, original_language: 'ja', industry: 'japanese',
+                genres: ['Animation', 'Family', 'Fantasy'], budget: 19000000, revenue: 274925095, imdb_id: 'tt0245429',
+                poster: 'https://image.tmdb.org/t/p/w500/39wmItIWsg5sZMyRUHLkWBcuVCM.jpg',
+                backdrop: 'https://image.tmdb.org/t/p/original/bSXfU4dwZyBA1vMmXvejdRXBvuF.jpg',
+                overview: 'A young girl, Chihiro, becomes trapped in a strange new world of spirits. When her parents undergo a mysterious transformation, she must call upon the courage she never knew she had to free her family.',
+                director: 'Hayao Miyazaki', writers: ['Hayao Miyazaki'],
+                production: ['Studio Ghibli'],
+                trailerKey: 'ByXuk9QqQkk',
+                cast: [
+                    { id: 19587, name: 'Rumi Hiiragi', character: 'Chihiro Ogino (voice)', profile: '' }
+                ]
+            },
+            {
+                id: 872585, media_type: 'movie', title: 'Oppenheimer', original_title: 'Oppenheimer',
+                release_date: '2023-07-19', vote_average: 8.1, runtime: 181, original_language: 'en', industry: 'hollywood',
+                genres: ['Drama', 'History'], budget: 100000000, revenue: 976000000, imdb_id: 'tt15398776',
+                poster: 'https://image.tmdb.org/t/p/w500/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg',
+                backdrop: 'https://image.tmdb.org/t/p/original/fm6KqXpk3M2HVveHwCrBSSBaO0V.jpg',
+                overview: 'The story of J. Robert Oppenheimer’s role in the development of the atomic bomb during World War II.',
+                director: 'Christopher Nolan', writers: ['Christopher Nolan'],
+                production: ['Syncopy', 'Universal Pictures'],
+                trailerKey: 'uYPbbksJxIg',
+                cast: [
+                    { id: 2037, name: 'Cillian Murphy', character: 'J. Robert Oppenheimer', profile: 'https://image.tmdb.org/t/p/w300/dm6V24NjjvjMiCtbMkc8Y2WPm2e.jpg' },
+                    { id: 5081, name: 'Emily Blunt', character: 'Kitty Oppenheimer', profile: 'https://image.tmdb.org/t/p/w300/nPJXaRMvu1vhGZ1PK6123456.jpg' },
+                    { id: 3223, name: 'Robert Downey Jr.', character: 'Lewis Strauss', profile: 'https://image.tmdb.org/t/p/w300/5qHNjhtjMD4YWH3UP0rm4tKwxCL.jpg' }
+                ]
+            },
+            {
+                id: 27205, media_type: 'movie', title: 'Inception', original_title: 'Inception',
+                release_date: '2010-07-15', vote_average: 8.4, runtime: 148, original_language: 'en', industry: 'hollywood',
+                genres: ['Action', 'Sci-Fi', 'Adventure'], budget: 160000000, revenue: 839000000, imdb_id: 'tt1375666',
+                poster: 'https://image.tmdb.org/t/p/w500/oYuLEt3zVCKq57qu2F8dT7NIa6f.jpg',
+                backdrop: 'https://image.tmdb.org/t/p/original/8ZTVqvKDQ8emSGUEMjsS4yHAwrp.jpg',
+                overview: 'Cobb, a skilled thief who commits corporate espionage by infiltrating the subconscious of his targets is offered a chance to regain his old life as payment for a task considered to be impossible: inception.',
+                director: 'Christopher Nolan', writers: ['Christopher Nolan'],
+                production: ['Warner Bros. Pictures', 'Legendary Pictures', 'Syncopy'],
+                trailerKey: 'YoHD9XEInc0',
+                cast: [
+                    { id: 6193, name: 'Leonardo DiCaprio', character: 'Dom Cobb', profile: 'https://image.tmdb.org/t/p/w300/wo2hJpn04vbtmh0B9utCFdsQhxM.jpg' }
+                ]
+            },
+            {
+                id: 783461, media_type: 'movie', title: 'Kalki 2898 AD', original_title: 'కల్కి 2898 ఎ.డి',
+                release_date: '2024-06-27', vote_average: 7.4, runtime: 181, original_language: 'te', industry: 'tollywood',
+                genres: ['Sci-Fi', 'Action', 'Fantasy'], budget: 75000000, revenue: 135000000, imdb_id: 'tt12735488',
+                poster: 'https://image.tmdb.org/t/p/w500/rstcAnBeTknqZnFJ222333444.jpg',
+                backdrop: 'https://image.tmdb.org/t/p/original/8yPsyROsx8NY123456789.jpg',
+                overview: 'A modern-day avatar of Vishnu, a Hindu god, who is believed to have descended to earth to protect the world from evil forces in a dystopian future.',
+                director: 'Nag Ashwin', writers: ['Nag Ashwin'],
+                production: ['Vyjayanthi Movies'],
+                trailerKey: 'kQDd1AhGIHk',
+                cast: [
+                    { id: 237045, name: 'Prabhas', character: 'Bhairava', profile: '' },
+                    { id: 35780, name: 'Amitabh Bachchan', character: 'Ashwatthama', profile: '' }
+                ]
+            },
+            {
+                id: 1396, media_type: 'tv', title: 'Breaking Bad', original_title: 'Breaking Bad',
+                release_date: '2008-01-20', vote_average: 8.9, runtime: 47, original_language: 'en', industry: 'hollywood',
+                genres: ['Drama', 'Crime'], budget: 0, revenue: 0, imdb_id: 'tt0903747',
+                poster: 'https://image.tmdb.org/t/p/w500/ztkUQFLlC19CCMYHW9o1zWhJRNq.jpg',
+                backdrop: 'https://image.tmdb.org/t/p/original/tsRy63Mu5cu8etL1X7ZLyf7UP1M.jpg',
+                overview: 'Walter White, a New Mexico chemistry teacher, is diagnosed with Stage III cancer and given a prognosis of only two years left to live.',
+                director: 'Vince Gilligan', writers: ['Vince Gilligan'],
+                production: ['Sony Pictures Television', 'High Bridge Productions'],
+                trailerKey: 'HhesaQXLuRY',
+                cast: [
+                    { id: 17419, name: 'Bryan Cranston', character: 'Walter White', profile: 'https://image.tmdb.org/t/p/w300/7Jahy5LZX2Fo8fGJltMreAI49hC.jpg' }
+                ]
+            },
+            {
+                id: 93405, media_type: 'tv', title: 'Squid Game', original_title: '오징어 게임',
+                release_date: '2021-09-17', vote_average: 7.8, runtime: 54, original_language: 'ko', industry: 'korean',
+                genres: ['Action & Adventure', 'Mystery', 'Drama'], budget: 0, revenue: 0, imdb_id: 'tt10919420',
+                poster: 'https://image.tmdb.org/t/p/w500/dDlEmu3EZ0Pgg93K2SVNLCjCSvE.jpg',
+                backdrop: 'https://image.tmdb.org/t/p/original/oaGvjB0DvdhXhOAuADfHb261ZHa.jpg',
+                overview: 'Hundreds of cash-strapped players accept a strange invitation to compete in children’s games. Inside, a tempting prize awaits — with deadly high stakes.',
+                director: 'Hwang Dong-hyuk', writers: ['Hwang Dong-hyuk'],
+                production: ['Siren Pictures'],
+                trailerKey: 'oqxAJKy0ii4',
+                cast: [
+                    { id: 73249, name: 'Lee Jung-jae', character: 'Seong Gi-hun', profile: '' }
+                ]
+            },
+            {
+                id: 37854, media_type: 'tv', title: 'One Piece', original_title: 'ワンピース',
+                release_date: '1999-10-20', vote_average: 8.7, runtime: 24, original_language: 'ja', industry: 'japanese',
+                genres: ['Action & Adventure', 'Comedy', 'Animation'], budget: 0, revenue: 0, imdb_id: 'tt0388629',
+                poster: 'https://image.tmdb.org/t/p/w500/cMD9Ygz11zjJzAovURpO75Qg7rT.jpg',
+                backdrop: 'https://image.tmdb.org/t/p/original/2rmK7mnchw9Xr3XdiTFSxTTLXqv.jpg',
+                overview: 'Years ago, the fearsome Pirate King, Gol D. Roger was executed leaving a huge pile of treasure and the famous "One Piece" behind.',
+                director: 'Eiichiro Oda', writers: ['Eiichiro Oda'],
+                production: ['Toei Animation'],
+                trailerKey: 'S8_YwFLCh4U',
+                cast: [
+                    { id: 1221114, name: 'Mayumi Tanaka', character: 'Monkey D. Luffy (voice)', profile: '' }
+                ]
+            }
+        ];
+
+        // Featured Actors Directory
+        const CURATED_ACTORS = [
+            {
+                id: 1190668, name: 'Timothée Chalamet', department: 'Acting', birthday: '1995-12-27',
+                place_of_birth: 'Manhattan, New York City, USA',
+                profile: 'https://image.tmdb.org/t/p/w500/BE2sdjpgsa2rNTFa66f7upkaOP.jpg',
+                biography: 'Timothée Hal Chalamet is an American and French actor. He has received various accolades, including nominations for an Academy Award, three BAFTA Film Awards, and two Golden Globe Awards.',
+                knownForIds: [693134, 157336]
+            },
+            {
+                id: 2037, name: 'Cillian Murphy', department: 'Acting', birthday: '1976-05-25',
+                place_of_birth: 'Douglas, Cork, Ireland',
+                profile: 'https://image.tmdb.org/t/p/w500/dm6V24NjjvjMiCtbMkc8Y2WPm2e.jpg',
+                biography: 'Cillian Murphy is an Irish actor who won the Academy Award for Best Actor for his portrayal of J. Robert Oppenheimer in Christopher Nolan’s Oppenheimer.',
+                knownForIds: [872585, 27205]
+            },
+            {
+                id: 147024, name: 'Ram Charan', department: 'Acting', birthday: '1985-03-27',
+                place_of_birth: 'Madras (now Chennai), Tamil Nadu, India',
+                profile: 'https://placehold.co/400x550/1e1b4b/a78bfa?text=Ram+Charan',
+                biography: 'Konidela Ram Charan is an Indian actor, producer, and entrepreneur who works predominantly in Telugu cinema. One of the highest-paid actors in Indian cinema, globally acclaimed for RRR.',
+                knownForIds: [579974]
+            },
+            {
+                id: 35742, name: 'Shah Rukh Khan', department: 'Acting', birthday: '1965-11-02',
+                place_of_birth: 'New Delhi, India',
+                profile: 'https://placehold.co/400x550/1e1b4b/60a5fa?text=Shah+Rukh+Khan',
+                biography: 'Shah Rukh Khan, also known by the initialism SRK, is an Indian actor and film producer who works in Hindi cinema. Referred to in the media as the "Baadshah of Bollywood".',
+                knownForIds: [872906]
+            },
+            {
+                id: 20738, name: 'Song Kang-ho', department: 'Acting', birthday: '1967-01-17',
+                place_of_birth: 'Gimhae, South Gyeongsang, South Korea',
+                profile: 'https://placehold.co/400x550/1e1b4b/a78bfa?text=Song+Kang-ho',
+                biography: 'Song Kang-ho is a South Korean actor who rose to international prominence for his performances in Memories of Murder, The Host, Snowpiercer, and the Oscar-winning Parasite.',
+                knownForIds: [496243]
+            },
+            {
+                id: 10297, name: 'Matthew McConaughey', department: 'Acting', birthday: '1969-11-04',
+                place_of_birth: 'Uvalde, Texas, USA',
+                profile: 'https://image.tmdb.org/t/p/w500/e9ZHRY5toiBZEy6XkBrxfqoZ2L3.jpg',
+                biography: 'Matthew David McConaughey is an American actor. He had his breakout role in Dazed and Confused and went on to star in Interstellar, Dallas Buyers Club, and True Detective.',
+                knownForIds: [157336]
+            }
+        ];
+
+        // ==================== UTILITY & IMAGE FALLBACK HELPERS ====================
+        function getPosterUrl(path, title = 'Movie') {
+            if (!path) return `https://placehold.co/500x750/181826/a78bfa?text=${encodeURIComponent(title)}`;
+            if (path.startsWith('http')) return path;
+            return `https://image.tmdb.org/t/p/w500${path}`;
+        }
+
+        function getBackdropUrl(path, title = 'CINEVERSE') {
+            if (!path) return `https://placehold.co/1280x720/12121c/6366f1?text=${encodeURIComponent(title)}`;
+            if (path.startsWith('http')) return path;
+            return `https://image.tmdb.org/t/p/original${path}`;
+        }
+
+        function handleImgError(img, title) {
+            img.onerror = null;
+            img.src = `https://placehold.co/500x750/181826/a78bfa?text=${encodeURIComponent(title || 'CINEVERSE')}`;
+        }
+
+        function formatCurrency(num) {
+            if (!num || num === 0) return 'N/A';
+            return '$' + (num / 1000000).toFixed(1) + 'M';
+        }
+
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const colors = {
+                info: 'border-purple-500/60 bg-cinema-card text-white',
+                success: 'border-emerald-500/60 bg-cinema-card text-emerald-300',
+                error: 'border-rose-500/60 bg-cinema-card text-rose-300'
+            };
+            const icons = {
+                info: 'fa-circle-info text-purple-400',
+                success: 'fa-circle-check text-emerald-400',
+                error: 'fa-triangle-exclamation text-rose-400'
+            };
+            const toast = document.createElement('div');
+            toast.className = `pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-2xl border shadow-2xl text-sm font-medium animate-fade-in ${colors[type]}`;
+            toast.innerHTML = `<i class="fa-solid ${icons[type]}"></i><span>${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(8px)';
+                toast.style.transition = 'all 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 3200);
+        }
+
+        function logActivity(event) {
+            STATE.activityLogs.unshift({ time: 'Just now', event });
+            if (STATE.activityLogs.length > 20) STATE.activityLogs.pop();
+        }
+
+        // ==================== TMDB LIVE API CLIENT WITH CACHING ====================
+        async function fetchTMDB(endpoint, params = {}) {
+            if (!STATE.tmdbKey) return null;
+            const url = new URL(`https://api.themoviedb.org/3${endpoint}`);
+            url.searchParams.set('api_key', STATE.tmdbKey);
+            Object.entries(params).forEach(([k, v]) => {
+                if (v !== undefined && v !== null && v !== '') url.searchParams.set(k, v);
+            });
+
+            const cacheKey = url.toString();
+            if (STATE.cache.has(cacheKey)) {
+                return STATE.cache.get(cacheKey);
+            }
+
+            try {
+                const res = await fetch(url.toString());
+                if (!res.ok) {
+                    if (res.status === 401) {
+                        showToast('Invalid TMDB API Key. Falling back to curated mode.', 'error');
+                        STATE.tmdbKey = '';
+                        updateApiStatusUI();
+                    }
+                    return null;
+                }
+                const data = await res.json();
+                STATE.cache.set(cacheKey, data);
+                return data;
+            } catch (err) {
+                console.warn('TMDB network fallback engaged:', err);
+                return null;
+            }
+        }
+
+        function normalizeTmdbItem(item, forcedType = null) {
+            const mediaType = forcedType || item.media_type || (item.first_air_date ? 'tv' : 'movie');
+            const title = item.title || item.name || 'Untitled';
+            const date = item.release_date || item.first_air_date || '2024-01-01';
+            const genreNames = (item.genre_ids || []).map(id => GENRES[id]).filter(Boolean);
+            if (!genreNames.length && item.genres) {
+                item.genres.forEach(g => genreNames.push(g.name));
+            }
+            const langMap = { te: 'tollywood', hi: 'bollywood', ko: 'korean', ja: 'japanese', ta: 'kollywood', en: 'hollywood' };
+            return {
+                id: item.id,
+                media_type: mediaType,
+                title,
+                original_title: item.original_title || item.original_name || title,
+                release_date: date,
+                vote_average: Number((item.vote_average || 7.5).toFixed(1)),
+                runtime: item.runtime || (item.episode_run_time?.[0]) || 135,
+                original_language: item.original_language || 'en',
+                industry: langMap[item.original_language] || 'international',
+                genres: genreNames.length ? genreNames : ['Drama'],
+                budget: item.budget || 0,
+                revenue: item.revenue || 0,
+                imdb_id: item.imdb_id || '',
+                poster: getPosterUrl(item.poster_path, title),
+                backdrop: getBackdropUrl(item.backdrop_path, title),
+                overview: item.overview || 'No synopsis available for this title yet.',
+                director: item.director || 'Acclaimed Filmmaker',
+                writers: item.writers || [],
+                production: (item.production_companies || []).map(c => c.name),
+                trailerKey: item.trailerKey || '',
+                cast: item.cast || []
+            };
+        }
+
+        // ==================== ROUTING & NAVIGATION ====================
+        function navigate(view, params = {}) {
+            STATE.currentView = view;
+            STATE.viewParams = params;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // Update active nav pills
+            document.querySelectorAll('.nav-link').forEach(btn => {
+                btn.classList.remove('text-white', 'bg-white/10');
+                btn.classList.add('text-gray-300');
+            });
+            const activeKey = view === 'discover' ? (params.type === 'tv' ? 'tv' : 'movies') : view;
+            const activeBtn = document.querySelector(`[data-nav="${activeKey}"]`);
+            if (activeBtn) {
+                activeBtn.classList.add('text-white', 'bg-white/10');
+                activeBtn.classList.remove('text-gray-300');
+            }
+
+            renderCurrentView();
+        }
+
+        async function renderCurrentView() {
+            const root = document.getElementById('app-root');
+            switch (STATE.currentView) {
+                case 'home':
+                    await renderHomeView(root);
+                    break;
+                case 'discover':
+                    await renderDiscoverView(root, STATE.viewParams);
+                    break;
+                case 'details':
+                    await renderDetailsView(root, STATE.viewParams);
+                    break;
+                case 'actors':
+                    renderActorsView(root);
+                    break;
+                case 'actor_details':
+                    await renderActorDetailsView(root, STATE.viewParams);
+                    break;
+                case 'watchlist':
+                    renderWatchlistView(root);
+                    break;
+                case 'tools':
+                    renderToolsView(root);
+                    break;
+                case 'admin':
+                    renderAdminView(root);
+                    break;
+                case 'about':
+                    renderAboutView(root);
+                    break;
+                default:
+                    await renderHomeView(root);
+            }
+        }
+
+        // ==================== REUSABLE MOVIE CARD COMPONENT ====================
+        function createMovieCard(item) {
+            const year = (item.release_date || '2024').slice(0, 4);
+            const inWatchlist = STATE.watchlist.some(w => w.id === item.id);
+            const primaryGenre = item.genres?.[0] || 'Cinema';
+            const typeBadge = item.media_type === 'tv' ? 'TV SERIES' : (item.industry || 'MOVIE').toUpperCase();
+
+            return `
+                <div class="group bg-cinema-card border border-cinema-border rounded-2xl overflow-hidden poster-hover flex flex-col justify-between">
+                    <div class="relative aspect-[2/3] overflow-hidden bg-cinema-surface cursor-pointer" onclick="navigate('details', {id: ${item.id}, type: '${item.media_type}'})">
+                        <img
+                            src="${item.poster}"
+                            alt="${item.title}"
+                            loading="lazy"
+                            onerror="handleImgError(this, '${item.title.replace(/'/g, '')}')"
+                            class="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                        />
+                        <div class="absolute inset-0 bg-gradient-to-t from-cinema-bg via-transparent to-black/30 opacity-80"></div>
+
+                        <!-- Rating Badge -->
+                        <div class="absolute top-2.5 left-2.5 flex items-center gap-1 bg-black/75 backdrop-blur-md border border-white/10 px-2 py-1 rounded-lg text-xs font-bold text-amber-400">
+                            <i class="fa-solid fa-star text-[10px]"></i>
+                            <span>${item.vote_average}</span>
+                        </div>
+
+                        <!-- Type/Industry Tag -->
+                        <div class="absolute top-2.5 right-2.5 bg-purple-600/85 backdrop-blur-md px-2 py-0.5 rounded-lg text-[10px] font-bold tracking-wider text-white">
+                            ${typeBadge}
+                        </div>
+
+                        <!-- Quick Hover Overlay -->
+                        <div class="absolute inset-x-3 bottom-3 flex items-center justify-between gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                            <button onclick="event.stopPropagation(); navigate('details', {id: ${item.id}, type: '${item.media_type}'})" class="flex-1 bg-white text-black font-bold text-xs py-2 rounded-xl hover:bg-gray-200 transition shadow">
+                                View Details
+                            </button>
+                            <button onclick="event.stopPropagation(); toggleWatchlist(${item.id}, '${item.media_type}')" class="w-9 h-9 rounded-xl ${inWatchlist ? 'bg-purple-600 text-white' : 'bg-black/80 text-white hover:bg-purple-600'} border border-white/15 flex items-center justify-center transition" title="Toggle Watchlist">
+                                <i class="fa-solid ${inWatchlist ? 'fa-check' : 'fa-plus'} text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="p-3.5 flex-1 flex flex-col justify-between">
+                        <div>
+                            <h3 onclick="navigate('details', {id: ${item.id}, type: '${item.media_type}'})" class="font-display font-bold text-sm text-white group-hover:text-purple-400 transition line-clamp-1 cursor-pointer">
+                                ${item.title}
+                            </h3>
+                            <div class="flex items-center justify-between text-xs text-gray-400 mt-1">
+                                <span>${year}</span>
+                                <span class="px-2 py-0.5 rounded-md bg-white/5 text-gray-300 text-[11px]">${primaryGenre}</span>
+                            </div>
+                        </div>
+                        <div class="mt-3 pt-2.5 border-t border-cinema-border/70 flex items-center justify-between gap-2">
+                            <button onclick="navigate('details', {id: ${item.id}, type: '${item.media_type}'})" class="text-xs font-semibold text-blue-400 hover:text-blue-300 transition">
+                                Details &rarr;
+                            </button>
+                            <button onclick="toggleWatchlist(${item.id}, '${item.media_type}')" class="text-xs font-medium ${inWatchlist ? 'text-purple-400' : 'text-gray-400 hover:text-white'} transition">
+                                <i class="fa-solid ${inWatchlist ? 'fa-bookmark' : 'fa-plus'} mr-1"></i>${inWatchlist ? 'Saved' : 'Watchlist'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // ==================== 1. HOME PAGE VIEW ====================
+        async function renderHomeView(root) {
+            root.innerHTML = `
+                <div class="animate-fade-in">
+                    <!-- HERO BANNER -->
+                    <section id="hero-section" class="relative min-h-[72vh] md:min-h-[82vh] flex items-end pb-12 md:pb-20 overflow-hidden">
+                        <div class="absolute inset-0 bg-cinema-surface animate-pulse"></div>
+                    </section>
+
+                    <!-- GLOBAL INDUSTRY QUICK EXPLORER -->
+                    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6 relative z-10">
+                        <div class="bg-cinema-card/90 backdrop-blur-xl border border-cinema-border rounded-3xl p-4 sm:p-6 shadow-2xl">
+                            <div class="flex flex-wrap items-center justify-between gap-4">
+                                <div>
+                                    <span class="text-xs font-bold uppercase tracking-widest text-purple-400">Global Cinema Hub</span>
+                                    <h2 class="font-display font-bold text-white text-lg">Explore World Film Industries</h2>
+                                </div>
+                                <div class="flex flex-wrap gap-2">
+                                    <button onclick="navigate('discover', {industry: 'hollywood'})" class="px-3.5 py-2 rounded-xl bg-cinema-surface hover:bg-purple-600/20 border border-cinema-border hover:border-purple-500 text-xs font-semibold text-white transition">🇺🇸 Hollywood</button>
+                                    <button onclick="navigate('discover', {industry: 'bollywood'})" class="px-3.5 py-2 rounded-xl bg-cinema-surface hover:bg-purple-600/20 border border-cinema-border hover:border-purple-500 text-xs font-semibold text-white transition">🇮🇳 Bollywood</button>
+                                    <button onclick="navigate('discover', {industry: 'tollywood'})" class="px-3.5 py-2 rounded-xl bg-cinema-surface hover:bg-purple-600/20 border border-cinema-border hover:border-purple-500 text-xs font-semibold text-white transition">🎬 Tollywood</button>
+                                    <button onclick="navigate('discover', {industry: 'korean'})" class="px-3.5 py-2 rounded-xl bg-cinema-surface hover:bg-purple-600/20 border border-cinema-border hover:border-purple-500 text-xs font-semibold text-white transition">🇰🇷 Korean</button>
+                                    <button onclick="navigate('discover', {industry: 'japanese'})" class="px-3.5 py-2 rounded-xl bg-cinema-surface hover:bg-purple-600/20 border border-cinema-border hover:border-purple-500 text-xs font-semibold text-white transition">🇯🇵 Japanese</button>
+                                    <button onclick="navigate('tools')" class="px-3.5 py-2 rounded-xl gradient-btn text-xs font-bold text-white shadow"><i class="fa-solid fa-wand-magic-sparkles mr-1"></i> AI Recommender</button>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- DYNAMIC CATALOG ROWS -->
+                    <div id="home-sections-container" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-14 mt-12">
+                        <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-5">
+                            ${Array(5).fill('<div class="aspect-[2/3] rounded-2xl bg-cinema-card animate-pulse"></div>').join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Fetch Live TMDB or Fallback Curated Data
+            const [trendingRes, popularRes, topRatedRes, upcomingRes, nowPlayingRes, tvRes] = await Promise.all([
+                fetchTMDB('/trending/movie/week'),
+                fetchTMDB('/movie/popular'),
+                fetchTMDB('/movie/top_rated'),
+                fetchTMDB('/movie/upcoming'),
+                fetchTMDB('/movie/now_playing'),
+                fetchTMDB('/tv/popular')
+            ]);
+
+            const trending = trendingRes?.results?.map(i => normalizeTmdbItem(i, 'movie')) || CURATED_CATALOG.filter(m => m.media_type === 'movie');
+            const popular = popularRes?.results?.map(i => normalizeTmdbItem(i, 'movie')) || [...CURATED_CATALOG].reverse().filter(m => m.media_type === 'movie');
+            const topRated = topRatedRes?.results?.map(i => normalizeTmdbItem(i, 'movie')) || [...CURATED_CATALOG].sort((a, b) => b.vote_average - a.vote_average).filter(m => m.media_type === 'movie');
+            const upcoming = upcomingRes?.results?.map(i => normalizeTmdbItem(i, 'movie')) || CURATED_CATALOG.filter(m => ['tollywood', 'bollywood', 'hollywood'].includes(m.industry) && m.media_type === 'movie');
+            const nowPlaying = nowPlayingRes?.results?.map(i => normalizeTmdbItem(i, 'movie')) || CURATED_CATALOG.slice(0, 5);
+            const popularTv = tvRes?.results?.map(i => normalizeTmdbItem(i, 'tv')) || CURATED_CATALOG.filter(m => m.media_type === 'tv');
+
+            // Render Hero Featured Movie
+            const featured = trending[0] || CURATED_CATALOG[0];
+            const heroEl = document.getElementById('hero-section');
+            if (heroEl) {
+                heroEl.innerHTML = `
+                    <img src="${featured.backdrop}" alt="${featured.title}" onerror="handleImgError(this, '${featured.title}')" class="absolute inset-0 w-full h-full object-cover object-center" />
+                    <div class="absolute inset-0 hero-gradient"></div>
+                    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+                        <div class="max-w-2xl space-y-4">
+                            <div class="flex flex-wrap items-center gap-2.5">
+                                <span class="px-3 py-1 rounded-full bg-purple-600/30 border border-purple-500/50 text-purple-300 text-xs font-bold tracking-wider uppercase">
+                                    <i class="fa-solid fa-fire mr-1"></i> #1 Trending Spotlight
+                                </span>
+                                <span class="px-2.5 py-1 rounded-full bg-white/10 text-amber-400 text-xs font-bold">
+                                    <i class="fa-solid fa-star mr-1"></i> ${featured.vote_average} TMDB
+                                </span>
+                                <span class="text-xs text-gray-300 font-medium">${(featured.release_date || '').slice(0, 4)} &bull; ${featured.genres.join(', ')}</span>
+                            </div>
+                            <h1 class="font-display font-extrabold text-4xl sm:text-5xl md:text-6xl text-white tracking-tight leading-tight">
+                                ${featured.title}
+                            </h1>
+                            <p class="text-gray-300 text-sm sm:text-base line-clamp-3 leading-relaxed">
+                                ${featured.overview}
+                            </p>
+                            <div class="flex flex-wrap items-center gap-3 pt-2">
+                                <button onclick="playTrailer(${featured.id}, '${featured.title.replace(/'/g, '')}', '${featured.trailerKey || ''}')" class="gradient-btn px-6 py-3.5 rounded-2xl text-sm font-bold text-white flex items-center gap-2.5 shadow-xl">
+                                    <i class="fa-solid fa-play"></i> Watch Official Trailer
+                                </button>
+                                <button onclick="navigate('details', {id: ${featured.id}, type: '${featured.media_type}'})" class="px-6 py-3.5 rounded-2xl bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/15 text-sm font-bold text-white flex items-center gap-2 transition">
+                                    <i class="fa-solid fa-circle-info"></i> Explore Details
+                                </button>
+                                <button onclick="toggleWatchlist(${featured.id}, '${featured.media_type}')" class="p-3.5 rounded-2xl bg-cinema-card/90 hover:bg-purple-600 border border-cinema-border text-white transition" title="Add to Watchlist">
+                                    <i class="fa-solid fa-bookmark"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Render All 10 Home Sections
+            const sectionsEl = document.getElementById('home-sections-container');
+            if (!sectionsEl) return;
+
+            const renderRow = (title, subtitle, icon, items, filterLinkParams) => `
+                <section>
+                    <div class="flex items-end justify-between mb-5">
+                        <div>
+                            <div class="flex items-center gap-2 text-purple-400 text-xs font-bold uppercase tracking-wider mb-1">
+                                <i class="fa-solid ${icon}"></i>
+                                <span>${subtitle}</span>
+                            </div>
+                            <h2 class="font-display font-extrabold text-xl sm:text-2xl text-white">${title}</h2>
+                        </div>
+                        <button onclick='navigate("discover", ${JSON.stringify(filterLinkParams)})' class="text-xs sm:text-sm font-semibold text-blue-400 hover:text-blue-300 transition">
+                            View All &rarr;
+                        </button>
+                    </div>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-5">
+                        ${items.slice(0, 5).map(createMovieCard).join('')}
+                    </div>
+                </section>
+            `;
+
+            sectionsEl.innerHTML = `
+                ${renderRow('Trending Movies', 'Updated Weekly', 'fa-bolt', trending, { type: 'movie', sort: 'popularity' })}
+                ${renderRow('Popular Movies', 'Global Audience Favorites', 'fa-fire', popular, { type: 'movie', sort: 'popularity' })}
+                ${renderRow('Top Rated Masterpieces', 'Critically Acclaimed', 'fa-award', topRated, { type: 'movie', sort: 'rating' })}
+                ${renderRow('Upcoming Releases', 'Coming Soon to Theaters', 'fa-calendar-days', upcoming, { type: 'movie', sort: 'release_date' })}
+                ${renderRow('Now Playing in Cinemas', 'In Theaters Now', 'fa-ticket', nowPlaying, { type: 'movie' })}
+                ${renderRow('Popular TV Series', 'Binge-Worthy Television', 'fa-tv', popularTv, { type: 'tv' })}
+
+                <!-- SECTION 7 & 8: RECENTLY ADDED & AI RECOMMENDED -->
+                <section class="bg-gradient-to-r from-purple-900/25 via-cinema-card to-blue-900/25 border border-purple-500/30 rounded-3xl p-6 sm:p-8">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                        <div>
+                            <span class="px-3 py-1 rounded-full bg-purple-600/30 text-purple-300 text-xs font-bold uppercase">Personalized Discovery</span>
+                            <h2 class="font-display font-extrabold text-2xl text-white mt-2">Recommended For You</h2>
+                            <p class="text-sm text-gray-400">Curated based on your watchlist & trending global cinema</p>
+                        </div>
+                        <button onclick="navigate('tools')" class="gradient-btn px-5 py-2.5 rounded-xl text-xs font-bold text-white self-start md:self-auto">
+                            <i class="fa-solid fa-robot mr-1.5"></i> Launch AI Movie Assistant
+                        </button>
+                    </div>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-5">
+                        ${CURATED_CATALOG.slice(2, 7).map(createMovieCard).join('')}
+                    </div>
+                </section>
+
+                <!-- SECTION 9: POPULAR ACTORS -->
+                <section>
+                    <div class="flex items-end justify-between mb-5">
+                        <div>
+                            <span class="text-xs font-bold uppercase tracking-wider text-blue-400">Global Stars & Filmmakers</span>
+                            <h2 class="font-display font-extrabold text-xl sm:text-2xl text-white">Popular Actors</h2>
+                        </div>
+                        <button onclick="navigate('actors')" class="text-xs sm:text-sm font-semibold text-blue-400 hover:text-blue-300">All Actors &rarr;</button>
+                    </div>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
+                        ${CURATED_ACTORS.map(actor => `
+                            <div onclick="navigate('actor_details', {id: ${actor.id}})" class="group bg-cinema-card border border-cinema-border rounded-2xl p-3 text-center cursor-pointer poster-hover">
+                                <div class="w-24 h-24 mx-auto rounded-full overflow-hidden border-2 border-purple-500/40 group-hover:border-purple-400 mb-3">
+                                    <img src="${actor.profile}" alt="${actor.name}" onerror="handleImgError(this, '${actor.name}')" class="w-full h-full object-cover" />
+                                </div>
+                                <h4 class="font-display font-bold text-sm text-white group-hover:text-purple-400 line-clamp-1">${actor.name}</h4>
+                                <p class="text-xs text-gray-400 mt-0.5">${actor.department}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                </section>
+
+                <!-- SECTION 10: EXPLORE BY GENRE -->
+                <section>
+                    <h2 class="font-display font-extrabold text-xl sm:text-2xl text-white mb-5">Explore by Genre</h2>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+                        ${['Action', 'Sci-Fi', 'Thriller', 'Drama', 'Comedy', 'Horror', 'Romance', 'Animation', 'Fantasy', 'Documentary'].map(g => `
+                            <button onclick="navigate('discover', {genre: '${g}'})" class="p-4 rounded-2xl bg-cinema-card hover:bg-gradient-to-r hover:from-purple-600/30 hover:to-blue-600/30 border border-cinema-border hover:border-purple-500/60 text-left transition group">
+                                <span class="font-display font-bold text-white group-hover:text-purple-300 block">${g}</span>
+                                <span class="text-xs text-gray-400">Browse catalog &rarr;</span>
+                            </button>
+                        `).join('')}
+                    </div>
+                </section>
+            `;
+        }
+
+        // ==================== 2. DISCOVER & ADVANCED FILTER ENGINE ====================
+        async function renderDiscoverView(root, params = {}) {
+            const type = params.type || 'all';
+            const industry = params.industry || 'all';
+            const genre = params.genre || 'all';
+            const minRating = params.minRating || 0;
+            const yearFrom = params.yearFrom || 1990;
+            const sort = params.sort || 'popularity';
+            const queryText = params.query || '';
+
+            root.innerHTML = `
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fade-in">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                        <div>
+                            <span class="text-xs font-bold uppercase tracking-widest text-purple-400">Advanced Discovery Engine</span>
+                            <h1 class="font-display font-extrabold text-3xl text-white">
+                                ${queryText ? `Search Results for "${queryText}"` : 'Explore Global Cinema & TV'}
+                            </h1>
+                        </div>
+                        <div class="text-xs text-gray-400 bg-cinema-card border border-cinema-border px-3.5 py-2 rounded-xl">
+                            Source: <strong class="text-white">${STATE.tmdbKey ? 'TMDB Live REST API' : 'Curated Multi-Industry Database'}</strong>
+                        </div>
+                    </div>
+
+                    <!-- FILTER CONTROL BAR -->
+                    <div class="bg-cinema-card border border-cinema-border rounded-3xl p-5 mb-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
+                        <div>
+                            <label class="block text-[11px] font-bold uppercase text-gray-400 mb-1">Format</label>
+                            <select id="filter-type" onchange="applyDiscoverFilters()" class="w-full bg-cinema-surface border border-cinema-border rounded-xl px-3 py-2 text-sm text-white">
+                                <option value="all" ${type === 'all' ? 'selected' : ''}>All Titles</option>
+                                <option value="movie" ${type === 'movie' ? 'selected' : ''}>Movies</option>
+                                <option value="tv" ${type === 'tv' ? 'selected' : ''}>TV Shows</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold uppercase text-gray-400 mb-1">Film Industry</label>
+                            <select id="filter-industry" onchange="applyDiscoverFilters()" class="w-full bg-cinema-surface border border-cinema-border rounded-xl px-3 py-2 text-sm text-white">
+                                <option value="all" ${industry === 'all' ? 'selected' : ''}>All Industries</option>
+                                <option value="hollywood" ${industry === 'hollywood' ? 'selected' : ''}>Hollywood (English)</option>
+                                <option value="bollywood" ${industry === 'bollywood' ? 'selected' : ''}>Bollywood (Hindi)</option>
+                                <option value="tollywood" ${industry === 'tollywood' ? 'selected' : ''}>Tollywood (Telugu)</option>
+                                <option value="korean" ${industry === 'korean' ? 'selected' : ''}>Korean Cinema</option>
+                                <option value="japanese" ${industry === 'japanese' ? 'selected' : ''}>Japanese Cinema</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold uppercase text-gray-400 mb-1">Genre</label>
+                            <select id="filter-genre" onchange="applyDiscoverFilters()" class="w-full bg-cinema-surface border border-cinema-border rounded-xl px-3 py-2 text-sm text-white">
+                                <option value="all">All Genres</option>
+                                ${['Action', 'Adventure', 'Animation', 'Comedy', 'Crime', 'Drama', 'Fantasy', 'Horror', 'Mystery', 'Romance', 'Sci-Fi', 'Thriller'].map(g =>
+                                    `<option value="${g}" ${genre === g ? 'selected' : ''}>${g}</option>`
+                                ).join('')}
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold uppercase text-gray-400 mb-1">Min Rating: <span id="rating-val" class="text-amber-400">${minRating}+</span></label>
+                            <input type="range" id="filter-rating" min="0" max="9" step="0.5" value="${minRating}" oninput="document.getElementById('rating-val').innerText = this.value + '+'" onchange="applyDiscoverFilters()" class="w-full accent-purple-500 mt-2">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold uppercase text-gray-400 mb-1">Released After</label>
+                            <input type="number" id="filter-year" value="${yearFrom}" min="1950" max="2026" onchange="applyDiscoverFilters()" class="w-full bg-cinema-surface border border-cinema-border rounded-xl px-3 py-2 text-sm text-white">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold uppercase text-gray-400 mb-1">Sort By</label>
+                            <select id="filter-sort" onchange="applyDiscoverFilters()" class="w-full bg-cinema-surface border border-cinema-border rounded-xl px-3 py-2 text-sm text-white">
+                                <option value="popularity" ${sort === 'popularity' ? 'selected' : ''}>Popularity</option>
+                                <option value="rating" ${sort === 'rating' ? 'selected' : ''}>Highest Rated</option>
+                                <option value="release_date" ${sort === 'release_date' ? 'selected' : ''}>Newest Release</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- RESULTS GRID -->
+                    <div id="discover-results-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5">
+                        ${Array(10).fill('<div class="aspect-[2/3] rounded-2xl bg-cinema-card animate-pulse"></div>').join('')}
+                    </div>
+                </div>
+            `;
+
+            let results = [];
+
+            // If live TMDB key exists, query TMDB search or discover endpoints
+            if (STATE.tmdbKey) {
+                if (queryText) {
+                    const searchRes = await fetchTMDB('/search/multi', { query: queryText });
+                    if (searchRes?.results) {
+                        results = searchRes.results
+                            .filter(r => r.media_type === 'movie' || r.media_type === 'tv')
+                            .map(r => normalizeTmdbItem(r));
+                    }
+                } else {
+                    const langByIndustry = { bollywood: 'hi', tollywood: 'te', korean: 'ko', japanese: 'ja', hollywood: 'en' };
+                    const genreId = Object.entries(GENRES).find(([, name]) => name.toLowerCase() === genre.toLowerCase())?.[0];
+                    const tmdbSort = sort === 'rating' ? 'vote_average.desc' : (sort === 'release_date' ? 'primary_release_date.desc' : 'popularity.desc');
+                    const endpoint = type === 'tv' ? '/discover/tv' : '/discover/movie';
+                    const discRes = await fetchTMDB(endpoint, {
+                        with_original_language: langByIndustry[industry] || '',
+                        with_genres: genreId || '',
+                        'vote_average.gte': minRating || '',
+                        'primary_release_date.gte': `${yearFrom}-01-01`,
+                        sort_by: tmdbSort,
+                        'vote_count.gte': sort === 'rating' ? 100 : 10
+                    });
+                    if (discRes?.results) {
+                        results = discRes.results.map(r => normalizeTmdbItem(r, type === 'tv' ? 'tv' : 'movie'));
+                    }
+                }
+            }
+
+            // Merge/Fallback with Curated Catalog
+            if (!results.length) {
+                results = CURATED_CATALOG.filter(item => {
+                    if (type !== 'all' && item.media_type !== type) return false;
+                    if (industry !== 'all' && item.industry !== industry) return false;
+                    if (genre !== 'all' && !item.genres.some(g => g.toLowerCase().includes(genre.toLowerCase()))) return false;
+                    if (item.vote_average < Number(minRating)) return false;
+                    if (Number((item.release_date || '2020').slice(0, 4)) < Number(yearFrom)) return false;
+                    if (queryText) {
+                        const q = queryText.toLowerCase();
+                        const matchTitle = item.title.toLowerCase().includes(q) || item.original_title.toLowerCase().includes(q);
+                        const matchDirector = (item.director || '').toLowerCase().includes(q);
+                        const matchCast = (item.cast || []).some(c => c.name.toLowerCase().includes(q));
+                        const matchGenre = item.genres.some(g => g.toLowerCase().includes(q));
+                        return matchTitle || matchDirector || matchCast || matchGenre;
+                    }
+                    return true;
+                });
+            }
+
+            // Apply client-side sorting
+            if (sort === 'rating') results.sort((a, b) => b.vote_average - a.vote_average);
+            if (sort === 'release_date') results.sort((a, b) => (b.release_date || '').localeCompare(a.release_date || ''));
+
+            const grid = document.getElementById('discover-results-grid');
+            if (!grid) return;
+
+            if (!results.length) {
+                grid.innerHTML = `
+                    <div class="col-span-full bg-cinema-card border border-cinema-border rounded-3xl p-12 text-center">
+                        <i class="fa-solid fa-film text-4xl text-gray-600 mb-3"></i>
+                        <h3 class="font-display font-bold text-xl text-white">No matching titles found</h3>
+                        <p class="text-sm text-gray-400 mt-1 mb-5">Try broadening your filters or connecting a live TMDB API key to search 900,000+ titles.</p>
+                        <button onclick="navigate('discover', {})" class="gradient-btn px-5 py-2.5 rounded-xl text-sm font-bold text-white">Reset All Filters</button>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = results.map(createMovieCard).join('');
+        }
+
+        function applyDiscoverFilters() {
+            navigate('discover', {
+                type: document.getElementById('filter-type').value,
+                industry: document.getElementById('filter-industry').value,
+                genre: document.getElementById('filter-genre').value,
+                minRating: document.getElementById('filter-rating').value,
+                yearFrom: document.getElementById('filter-year').value,
+                sort: document.getElementById('filter-sort').value,
+                query: STATE.viewParams.query || ''
+            });
+        }
+
+        // ==================== 3. DEDICATED MOVIE / TV DETAILS PAGE ====================
+        async function renderDetailsView(root, params) {
+            const id = Number(params.id);
+            const type = params.type || 'movie';
+
+            root.innerHTML = `<div class="max-w-7xl mx-auto px-4 py-20 text-center text-gray-400"><i class="fa-solid fa-spinner fa-spin text-3xl text-purple-500 mb-3"></i><p>Loading cinematic metadata...</p></div>`;
+
+            let item = CURATED_CATALOG.find(m => m.id === id);
+            let similarItems = CURATED_CATALOG.filter(m => m.id !== id).slice(0, 5);
+
+            // Fetch full live details from TMDB if API key is active
+            if (STATE.tmdbKey) {
+                const liveData = await fetchTMDB(`/${type}/${id}`, { append_to_response: 'credits,videos,similar,recommendations' });
+                if (liveData) {
+                    item = normalizeTmdbItem(liveData, type);
+                    const crew = liveData.credits?.crew || [];
+                    const dir = crew.find(c => c.job === 'Director');
+                    if (dir) item.director = dir.name;
+                    item.writers = crew.filter(c => ['Writer', 'Screenplay', 'Story'].includes(c.job)).slice(0, 3).map(w => w.name);
+                    item.cast = (liveData.credits?.cast || []).slice(0, 8).map(c => ({
+                        id: c.id,
+                        name: c.name,
+                        character: c.character,
+                        profile: getPosterUrl(c.profile_path, c.name)
+                    }));
+                    const trailer = (liveData.videos?.results || []).find(v => v.site === 'YouTube' && v.type === 'Trailer') || liveData.videos?.results?.[0];
+                    if (trailer) item.trailerKey = trailer.key;
+                    const sim = liveData.recommendations?.results?.length ? liveData.recommendations.results : liveData.similar?.results;
+                    if (sim?.length) similarItems = sim.slice(0, 5).map(s => normalizeTmdbItem(s, type));
+                }
+            }
+
+            if (!item) item = CURATED_CATALOG[0];
+
+            // Track Recently Viewed
+            STATE.recentlyViewed = [item, ...STATE.recentlyViewed.filter(r => r.id !== item.id)].slice(0, 6);
+
+            const watchlistEntry = STATE.watchlist.find(w => w.id === item.id);
+            const movieReviews = STATE.reviews.filter(r => r.movieId === item.id);
+
+            root.innerHTML = `
+                <div class="animate-fade-in">
+                    <!-- BACKDROP HEADER -->
+                    <div class="relative min-h-[55vh] flex items-end pb-10">
+                        <img src="${item.backdrop}" alt="${item.title}" onerror="handleImgError(this, '${item.title}')" class="absolute inset-0 w-full h-full object-cover opacity-45" />
+                        <div class="absolute inset-0 hero-gradient"></div>
+
+                        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pt-12">
+                            <button onclick="navigate('home')" class="mb-6 inline-flex items-center gap-2 text-xs font-semibold text-gray-300 hover:text-white bg-white/10 px-3.5 py-2 rounded-xl backdrop-blur-md">
+                                <i class="fa-solid fa-arrow-left"></i> Back to Discovery
+                            </button>
+
+                            <div class="flex flex-col md:flex-row gap-8 items-start">
+                                <!-- POSTER -->
+                                <div class="w-48 sm:w-64 shrink-0 rounded-3xl overflow-hidden border-2 border-white/15 shadow-2xl mx-auto md:mx-0">
+                                    <img src="${item.poster}" alt="${item.title}" onerror="handleImgError(this, '${item.title}')" class="w-full h-auto object-cover" />
+                                </div>
+
+                                <!-- CORE METADATA -->
+                                <div class="flex-1 space-y-4">
+                                    <div class="flex flex-wrap items-center gap-2">
+                                        <span class="px-3 py-1 rounded-full bg-purple-600 text-white text-xs font-bold uppercase">${item.media_type}</span>
+                                        <span class="px-3 py-1 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-300 text-xs font-bold">
+                                            <i class="fa-solid fa-star mr-1"></i> ${item.vote_average} / 10 TMDB
+                                        </span>
+                                        ${item.imdb_id ? `<a href="https://www.imdb.com/title/${item.imdb_id}" target="_blank" rel="noopener" class="px-3 py-1 rounded-full bg-yellow-400 text-black text-xs font-extrabold hover:brightness-110">IMDb: ${item.imdb_id}</a>` : ''}
+                                        <span class="text-xs text-gray-300 font-medium">${item.release_date} &bull; ${item.runtime} min &bull; ${item.original_language.toUpperCase()}</span>
+                                    </div>
+
+                                    <div>
+                                        <h1 class="font-display font-extrabold text-3xl sm:text-5xl text-white leading-tight">${item.title}</h1>
+                                        ${item.original_title !== item.title ? `<p class="text-sm text-gray-400 mt-1">Original Title: <span class="text-gray-200">${item.original_title}</span></p>` : ''}
+                                    </div>
+
+                                    <div class="flex flex-wrap gap-2">
+                                        ${item.genres.map(g => `<button onclick="navigate('discover', {genre: '${g}'})" class="px-3 py-1 rounded-xl bg-white/10 hover:bg-purple-600/40 text-xs font-semibold text-gray-200 transition">${g}</button>`).join('')}
+                                    </div>
+
+                                    <p class="text-gray-300 text-sm sm:text-base leading-relaxed max-w-3xl">
+                                        ${item.overview}
+                                    </p>
+
+                                    <!-- INTERACTIVE ACTION BAR -->
+                                    <div class="flex flex-wrap items-center gap-3 pt-2">
+                                        <button onclick="playTrailer(${item.id}, '${item.title.replace(/'/g, '')}', '${item.trailerKey || ''}')" class="gradient-btn px-6 py-3 rounded-2xl text-sm font-bold text-white flex items-center gap-2 shadow-lg">
+                                            <i class="fa-solid fa-play"></i> View Official Trailer
+                                        </button>
+                                        <button onclick="toggleWatchlist(${item.id}, '${item.media_type}')" class="px-5 py-3 rounded-2xl ${watchlistEntry ? 'bg-purple-600 text-white' : 'bg-cinema-card border border-cinema-border text-white hover:border-purple-500'} text-sm font-bold flex items-center gap-2 transition">
+                                            <i class="fa-solid ${watchlistEntry ? 'fa-check' : 'fa-bookmark'}"></i>
+                                            ${watchlistEntry ? 'In Watchlist' : 'Add to Watchlist'}
+                                        </button>
+                                        <button onclick="toggleWatchedStatus(${item.id})" class="px-5 py-3 rounded-2xl ${watchlistEntry?.watched ? 'bg-emerald-600/30 border border-emerald-500 text-emerald-300' : 'bg-cinema-card border border-cinema-border text-gray-200 hover:border-emerald-500'} text-sm font-bold flex items-center gap-2 transition">
+                                            <i class="fa-solid fa-eye"></i>
+                                            ${watchlistEntry?.watched ? 'Watched' : 'Mark as Watched'}
+                                        </button>
+                                        <button onclick="shareMovie('${item.title.replace(/'/g, '')}')" class="p-3 rounded-2xl bg-cinema-card border border-cinema-border hover:border-blue-500 text-gray-200 transition" title="Share Movie">
+                                            <i class="fa-solid fa-share-nodes"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TECHNICAL SPECS, CAST & REVIEWS -->
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 space-y-12">
+                        <!-- Production Specs Grid -->
+                        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 bg-cinema-card border border-cinema-border rounded-3xl p-5">
+                            <div>
+                                <span class="text-[11px] uppercase font-bold text-gray-400 block">Director</span>
+                                <span class="text-sm font-bold text-white mt-0.5 block">${item.director || 'N/A'}</span>
+                            </div>
+                            <div>
+                                <span class="text-[11px] uppercase font-bold text-gray-400 block">Writers</span>
+                                <span class="text-sm font-semibold text-gray-200 mt-0.5 block">${item.writers?.length ? item.writers.join(', ') : 'Original Screenplay'}</span>
+                            </div>
+                            <div>
+                                <span class="text-[11px] uppercase font-bold text-gray-400 block">Budget</span>
+                                <span class="text-sm font-bold text-emerald-400 mt-0.5 block">${formatCurrency(item.budget)}</span>
+                            </div>
+                            <div>
+                                <span class="text-[11px] uppercase font-bold text-gray-400 block">Box Office Revenue</span>
+                                <span class="text-sm font-bold text-blue-400 mt-0.5 block">${formatCurrency(item.revenue)}</span>
+                            </div>
+                            <div>
+                                <span class="text-[11px] uppercase font-bold text-gray-400 block">Industry / Language</span>
+                                <span class="text-sm font-semibold text-white mt-0.5 block capitalize">${item.industry} (${item.original_language.toUpperCase()})</span>
+                            </div>
+                            <div>
+                                <span class="text-[11px] uppercase font-bold text-gray-400 block">Production</span>
+                                <span class="text-xs font-semibold text-gray-300 mt-0.5 block line-clamp-2">${item.production?.length ? item.production.join(', ') : 'Major Studio'}</span>
+                            </div>
+                        </div>
+
+                        <!-- TOP BILLED CAST -->
+                        <section>
+                            <h2 class="font-display font-extrabold text-2xl text-white mb-4">Top Cast & Crew</h2>
+                            <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-4">
+                                ${(item.cast?.length ? item.cast : CURATED_ACTORS.slice(0, 4)).map(actor => `
+                                    <div onclick="navigate('actor_details', {id: ${actor.id}, name: '${actor.name.replace(/'/g, '')}'})" class="bg-cinema-card border border-cinema-border rounded-2xl p-3 cursor-pointer poster-hover">
+                                        <img src="${actor.profile || `https://placehold.co/300x400/181826/a78bfa?text=${encodeURIComponent(actor.name)}`}" alt="${actor.name}" onerror="handleImgError(this, '${actor.name}')" class="w-full aspect-[3/4] object-cover rounded-xl mb-2.5" />
+                                        <h4 class="font-display font-bold text-sm text-white line-clamp-1">${actor.name}</h4>
+                                        <p class="text-xs text-gray-400 line-clamp-1">${actor.character || actor.department || 'Cast'}</p>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </section>
+
+                        <!-- COMMUNITY REVIEW SYSTEM -->
+                        <section class="bg-cinema-card border border-cinema-border rounded-3xl p-6 sm:p-8">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                                <div>
+                                    <h2 class="font-display font-extrabold text-2xl text-white">Community Reviews & Ratings</h2>
+                                    <p class="text-xs text-gray-400">Share your critical perspective (1–10 scale)</p>
+                                </div>
+                                <span class="text-xs font-bold px-3 py-1.5 rounded-xl bg-purple-600/20 text-purple-300 border border-purple-500/30">
+                                    ${movieReviews.length} Community Review(s)
+                                </span>
+                            </div>
+
+                            <!-- Write Review Form -->
+                            <form onsubmit="submitMovieReview(event, ${item.id}, '${item.title.replace(/'/g, '')}')" class="bg-cinema-surface border border-cinema-border rounded-2xl p-4 mb-6 space-y-3">
+                                <div class="flex flex-col sm:flex-row gap-3">
+                                    <div class="sm:w-44">
+                                        <label class="block text-xs font-bold text-gray-400 mb-1">Your Score (1–10)</label>
+                                        <select id="review-score" class="w-full bg-cinema-card border border-cinema-border rounded-xl px-3 py-2 text-sm text-amber-400 font-bold">
+                                            ${[10,9,8,7,6,5,4,3,2,1].map(n => `<option value="${n}">${n} / 10 ★</option>`).join('')}
+                                        </select>
+                                    </div>
+                                    <div class="flex-1">
+                                        <label class="block text-xs font-bold text-gray-400 mb-1">Your Review</label>
+                                        <input type="text" id="review-text" required placeholder="What stood out about the direction, screenplay, or performances?" class="w-full bg-cinema-card border border-cinema-border rounded-xl px-4 py-2 text-sm text-white focus:border-purple-500 focus:outline-none">
+                                    </div>
+                                </div>
+                                <div class="flex justify-end">
+                                    <button type="submit" class="gradient-btn px-5 py-2 rounded-xl text-xs font-bold text-white">Publish Review</button>
+                                </div>
+                            </form>
+
+                            <!-- Review List -->
+                            <div class="space-y-4">
+                                ${movieReviews.length ? movieReviews.map(rev => `
+                                    <div class="bg-cinema-surface/80 border border-cinema-border rounded-2xl p-4 flex flex-col sm:flex-row justify-between gap-4">
+                                        <div class="space-y-1.5">
+                                            <div class="flex items-center gap-2.5">
+                                                <span class="font-bold text-sm text-white">${rev.userName}</span>
+                                                <span class="px-2 py-0.5 rounded-lg bg-amber-500/20 text-amber-300 text-xs font-bold">${rev.rating}/10 ★</span>
+                                                <span class="text-xs text-gray-500">${rev.date}</span>
+                                            </div>
+                                            <p class="text-sm text-gray-300 leading-relaxed">${rev.text}</p>
+                                        </div>
+                                        ${rev.userId === STATE.user.id ? `
+                                            <div class="flex items-start gap-2 shrink-0">
+                                                <button onclick="deleteReview('${rev.id}', ${item.id}, '${item.media_type}')" class="px-3 py-1.5 rounded-xl bg-rose-500/15 hover:bg-rose-500/30 text-rose-300 text-xs font-semibold">
+                                                    <i class="fa-solid fa-trash mr-1"></i>Delete
+                                                </button>
+                                            </div>
+                                        ` : ''}
+                                    </div>
+                                `).join('') : '<p class="text-sm text-gray-400 text-center py-4">Be the first cinephile to review this title!</p>'}
+                            </div>
+                        </section>
+
+                        <!-- SIMILAR & RECOMMENDED MOVIES -->
+                        <section>
+                            <h2 class="font-display font-extrabold text-2xl text-white mb-5">Similar & Recommended Titles</h2>
+                            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-5">
+                                ${similarItems.map(createMovieCard).join('')}
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            `;
+        }
+
+        // ==================== 4. ACTORS & DIRECTOR PROFILES ====================
+        function renderActorsView(root) {
+            root.innerHTML = `
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fade-in">
+                    <div class="mb-8">
+                        <span class="text-xs font-bold uppercase tracking-widest text-blue-400">Talent Directory</span>
+                        <h1 class="font-display font-extrabold text-3xl text-white">Actors & Visionary Directors</h1>
+                        <p class="text-sm text-gray-400 mt-1">Click any profile to inspect full biography and filmography.</p>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                        ${CURATED_ACTORS.map(actor => `
+                            <div onclick="navigate('actor_details', {id: ${actor.id}})" class="bg-cinema-card border border-cinema-border rounded-3xl p-5 flex gap-4 items-center cursor-pointer poster-hover">
+                                <img src="${actor.profile}" alt="${actor.name}" onerror="handleImgError(this, '${actor.name}')" class="w-24 h-28 rounded-2xl object-cover shrink-0 border border-white/10" />
+                                <div>
+                                    <span class="text-[11px] font-bold uppercase text-purple-400">${actor.department}</span>
+                                    <h3 class="font-display font-bold text-lg text-white">${actor.name}</h3>
+                                    <p class="text-xs text-gray-400 mt-1 line-clamp-2">${actor.biography}</p>
+                                    <span class="inline-block mt-2 text-xs font-semibold text-blue-400">View Filmography &rarr;</span>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        async function renderActorDetailsView(root, params) {
+            const actorId = Number(params.id);
+            let actor = CURATED_ACTORS.find(a => a.id === actorId);
+            let filmography = CURATED_CATALOG.filter(m => actor?.knownForIds?.includes(m.id));
+
+            if (STATE.tmdbKey) {
+                const livePerson = await fetchTMDB(`/person/${actorId}`, { append_to_response: 'combined_credits' });
+                if (livePerson) {
+                    actor = {
+                        id: livePerson.id,
+                        name: livePerson.name,
+                        department: livePerson.known_for_department || 'Acting',
+                        birthday: livePerson.birthday || 'N/A',
+                        place_of_birth: livePerson.place_of_birth || 'International',
+                        profile: getPosterUrl(livePerson.profile_path, livePerson.name),
+                        biography: livePerson.biography || `Acclaimed talent known for ${livePerson.known_for_department}.`
+                    };
+                    const credits = livePerson.combined_credits?.cast || [];
+                    if (credits.length) {
+                        filmography = credits
+                            .sort((a, b) => (b.popularity || 0) - (a.popularity || 0))
+                            .slice(0, 10)
+                            .map(c => normalizeTmdbItem(c));
+                    }
+                }
+            }
+
+            if (!actor) {
+                actor = {
+                    id: actorId,
+                    name: params.name || 'Featured Artist',
+                    department: 'Acting',
+                    birthday: 'Available via TMDB API',
+                    place_of_birth: 'Global Cinema',
+                    profile: `https://placehold.co/400x550/181826/a78bfa?text=${encodeURIComponent(params.name || 'Artist')}`,
+                    biography: 'Connect your free TMDB API key in the top bar to load full biographical records and complete multi-decade filmography credits.'
+                };
+            }
+            if (!filmography.length) filmography = CURATED_CATALOG.slice(0, 5);
+
+            root.innerHTML = `
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fade-in">
+                    <button onclick="navigate('actors')" class="mb-6 inline-flex items-center gap-2 text-xs font-semibold text-gray-300 hover:text-white bg-cinema-card border border-cinema-border px-3.5 py-2 rounded-xl">
+                        <i class="fa-solid fa-arrow-left"></i> Back to Actors
+                    </button>
+
+                    <div class="bg-cinema-card border border-cinema-border rounded-3xl p-6 sm:p-8 flex flex-col md:flex-row gap-8">
+                        <img src="${actor.profile}" alt="${actor.name}" onerror="handleImgError(this, '${actor.name}')" class="w-52 sm:w-64 rounded-2xl object-cover shrink-0 mx-auto md:mx-0 border border-white/10 shadow-xl" />
+                        <div class="space-y-4">
+                            <span class="px-3 py-1 rounded-full bg-blue-600/20 border border-blue-500/40 text-blue-300 text-xs font-bold uppercase">${actor.department}</span>
+                            <h1 class="font-display font-extrabold text-3xl sm:text-4xl text-white">${actor.name}</h1>
+                            <div class="flex flex-wrap gap-6 text-xs text-gray-400">
+                                <span><strong class="text-gray-200">Born:</strong> ${actor.birthday || 'N/A'}</span>
+                                <span><strong class="text-gray-200">Place of Birth:</strong> ${actor.place_of_birth || 'N/A'}</span>
+                            </div>
+                            <div>
+                                <h3 class="font-display font-bold text-sm uppercase tracking-wider text-gray-400 mb-1">Biography</h3>
+                                <p class="text-sm text-gray-300 leading-relaxed">${actor.biography}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-10">
+                        <h2 class="font-display font-extrabold text-2xl text-white mb-5">Known For & Filmography</h2>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-5">
+                            ${filmography.map(createMovieCard).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // ==================== 5. PERSONAL WATCHLIST & CUSTOM COLLECTIONS ====================
+        function renderWatchlistView(root) {
+            const watchedCount = STATE.watchlist.filter(w => w.watched).length;
+            root.innerHTML = `
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fade-in">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+                        <div>
+                            <span class="text-xs font-bold uppercase tracking-widest text-purple-400">Personal Cinema Vault</span>
+                            <h1 class="font-display font-extrabold text-3xl text-white">${STATE.user.name}'s Watchlist & Collections</h1>
+                            <p class="text-sm text-gray-400 mt-1">${STATE.watchlist.length} Saved Titles &bull; ${watchedCount} Marked as Watched</p>
+                        </div>
+                        <button onclick="createNewCollectionPrompt()" class="gradient-btn px-5 py-2.5 rounded-xl text-xs font-bold text-white self-start">
+                            <i class="fa-solid fa-folder-plus mr-1.5"></i> New Custom Collection
+                        </button>
+                    </div>
+
+                    <!-- CUSTOM COLLECTIONS -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">
+                        ${STATE.collections.map(col => `
+                            <div class="bg-cinema-card border border-cinema-border rounded-2xl p-5 flex items-center justify-between">
+                                <div>
+                                    <span class="text-[11px] font-bold uppercase text-blue-400">Curated List</span>
+                                    <h3 class="font-display font-bold text-lg text-white">${col.name}</h3>
+                                    <p class="text-xs text-gray-400 mt-0.5">${col.movieIds.length} movies in collection</p>
+                                </div>
+                                <div class="flex -space-x-3">
+                                    ${col.movieIds.slice(0, 3).map(mid => {
+                                        const m = CURATED_CATALOG.find(x => x.id === mid);
+                                        return m ? `<img src="${m.poster}" class="w-10 h-14 rounded-lg object-cover border-2 border-cinema-card" />` : '';
+                                    }).join('')}
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <!-- SAVED WATCHLIST ITEMS -->
+                    <h2 class="font-display font-extrabold text-xl text-white mb-4">Saved Watchlist Titles</h2>
+                    ${STATE.watchlist.length ? `
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                            ${STATE.watchlist.map(item => `
+                                <div class="bg-cinema-card border border-cinema-border rounded-2xl p-4 flex gap-4">
+                                    <img src="${item.poster}" alt="${item.title}" onerror="handleImgError(this, '${item.title}')" onclick="navigate('details', {id: ${item.id}, type: '${item.media_type}'})" class="w-24 h-36 rounded-xl object-cover cursor-pointer shrink-0" />
+                                    <div class="flex-1 flex flex-col justify-between">
+                                        <div>
+                                            <div class="flex items-center justify-between gap-2">
+                                                <span class="text-[11px] font-bold text-purple-400 uppercase">${item.genre} &bull; ${item.year}</span>
+                                                <span class="text-xs font-bold text-amber-400">★ ${item.rating}</span>
+                                            </div>
+                                            <h3 onclick="navigate('details', {id: ${item.id}, type: '${item.media_type}'})" class="font-display font-bold text-base text-white hover:text-purple-400 cursor-pointer mt-1">${item.title}</h3>
+
+                                            <!-- Personal Rating Selector -->
+                                            <div class="mt-2 flex items-center gap-2">
+                                                <span class="text-xs text-gray-400">My Score:</span>
+                                                <select onchange="updatePersonalRating(${item.id}, this.value)" class="bg-cinema-surface border border-cinema-border rounded-lg px-2 py-1 text-xs text-white">
+                                                    <option value="">Unrated</option>
+                                                    ${[10,9,8,7,6,5,4,3,2,1].map(s => `<option value="${s}" ${Number(item.personalRating) === s ? 'selected' : ''}>${s}/10</option>`).join('')}
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="flex items-center gap-2 mt-3 pt-2 border-t border-cinema-border">
+                                            <button onclick="toggleWatchedStatus(${item.id})" class="flex-1 py-1.5 rounded-lg text-xs font-bold ${item.watched ? 'bg-emerald-600/25 text-emerald-300 border border-emerald-500/40' : 'bg-white/5 text-gray-300 hover:bg-white/10'}">
+                                                <i class="fa-solid ${item.watched ? 'fa-check-double' : 'fa-eye'} mr-1"></i>${item.watched ? 'Watched' : 'Mark Watched'}
+                                            </button>
+                                            <button onclick="toggleWatchlist(${item.id}, '${item.media_type}')" class="px-3 py-1.5 rounded-lg bg-rose-500/15 hover:bg-rose-500/30 text-rose-300 text-xs font-semibold">
+                                                Remove
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    ` : `
+                        <div class="bg-cinema-card border border-cinema-border rounded-3xl p-12 text-center">
+                            <p class="text-gray-400 mb-4">Your watchlist is currently empty.</p>
+                            <button onclick="navigate('discover', {})" class="gradient-btn px-5 py-2.5 rounded-xl text-sm font-bold text-white">Explore Movies</button>
+                        </div>
+                    `}
+                </div>
+            `;
+        }
+
+        // ==================== 6. ADVANCED AI & CINEMA TOOLS HUB ====================
+        function renderToolsView(root) {
+            const [m1Id, m2Id] = STATE.compareSelection;
+            const m1 = CURATED_CATALOG.find(m => m.id === m1Id) || CURATED_CATALOG[0];
+            const m2 = CURATED_CATALOG.find(m => m.id === m2Id) || CURATED_CATALOG[1];
+
+            root.innerHTML = `
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10 animate-fade-in">
+                    <div>
+                        <span class="text-xs font-bold uppercase tracking-widest text-purple-400">Next-Gen Discovery Suite</span>
+                        <h1 class="font-display font-extrabold text-3xl text-white">AI Cinema Assistant, Mood Finder & Comparison Lab</h1>
+                    </div>
+
+                    <!-- 1. AI MOVIE RECOMMENDATION ASSISTANT (GEMINI POWERED + SMART FALLBACK) -->
+                    <section class="bg-gradient-to-br from-purple-900/30 via-cinema-card to-blue-900/30 border border-purple-500/40 rounded-3xl p-6 sm:p-8">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-11 h-11 rounded-2xl gradient-btn flex items-center justify-center text-white text-lg shadow-lg">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                            </div>
+                            <div>
+                                <h2 class="font-display font-extrabold text-xl text-white">CINEVERSE AI Movie Concierge</h2>
+                                <p class="text-xs text-gray-300">Describe your vibe, favorite directors, or plot elements — get tailored picks with reasons why.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col sm:flex-row gap-3">
+                            <input type="text" id="ai-prompt-input" placeholder="e.g., Mind-bending sci-fi with emotional father-daughter themes or gritty Korean revenge thrillers..." class="flex-1 bg-cinema-surface border border-cinema-border focus:border-purple-500 rounded-2xl px-4 py-3 text-sm text-white focus:outline-none">
+                            <button onclick="runAiRecommendation()" id="ai-rec-btn" class="gradient-btn px-6 py-3 rounded-2xl text-sm font-bold text-white shrink-0">
+                                Ask AI Concierge
+                            </button>
+                        </div>
+
+                        <!-- Mood Quick Chips -->
+                        <div class="flex flex-wrap items-center gap-2 mt-4">
+                            <span class="text-xs text-gray-400 mr-1">Mood Discovery:</span>
+                            ${['🤯 Mind-Bending', '🔥 High-Octane Action', '😭 Emotional Drama', '👻 Spine-Chilling Thriller', '✨ Visual Masterpiece'].map(mood => `
+                                <button onclick="document.getElementById('ai-prompt-input').value='Recommend movies for mood: ${mood}'; runAiRecommendation()" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-purple-600/30 border border-white/10 text-xs font-medium text-gray-200 transition">
+                                    ${mood}
+                                </button>
+                            `).join('')}
+                        </div>
+
+                        <div id="ai-rec-output" class="mt-6"></div>
+                    </section>
+
+                    <!-- 2. RANDOM MOVIE GENERATOR & TOP 10 RANKINGS -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <!-- Randomizer -->
+                        <div class="bg-cinema-card border border-cinema-border rounded-3xl p-6 flex flex-col justify-between">
+                            <div>
+                                <span class="text-xs font-bold uppercase text-blue-400">Can't Decide?</span>
+                                <h3 class="font-display font-extrabold text-xl text-white mt-1">Random Cinema Spinner</h3>
+                                <p class="text-xs text-gray-400 mt-1">Spin for a critically acclaimed movie across world cinema.</p>
+                            </div>
+                            <div id="random-movie-slot" class="my-6 bg-cinema-surface border border-cinema-border rounded-2xl p-4 flex items-center gap-4">
+                                <img src="${CURATED_CATALOG[0].poster}" class="w-16 h-24 rounded-xl object-cover" />
+                                <div>
+                                    <h4 class="font-display font-bold text-white">${CURATED_CATALOG[0].title}</h4>
+                                    <p class="text-xs text-gray-400">${CURATED_CATALOG[0].genres.join(', ')} &bull; ★ ${CURATED_CATALOG[0].vote_average}</p>
+                                    <button onclick="navigate('details', {id: ${CURATED_CATALOG[0].id}, type: 'movie'})" class="mt-2 text-xs font-bold text-purple-400">Open Details &rarr;</button>
+                                </div>
+                            </div>
+                            <button onclick="spinRandomMovie()" class="w-full py-3 rounded-xl bg-white/10 hover:bg-purple-600 text-sm font-bold text-white transition">
+                                <i class="fa-solid fa-dice mr-2"></i> Spin Random Movie
+                            </button>
+                        </div>
+
+                        <!-- Top 10 Global Rankings -->
+                        <div class="bg-cinema-card border border-cinema-border rounded-3xl p-6">
+                            <span class="text-xs font-bold uppercase text-amber-400">Hall of Fame</span>
+                            <h3 class="font-display font-extrabold text-xl text-white mt-1 mb-4">CINEVERSE Top Ranked Titles</h3>
+                            <div class="space-y-2.5 max-h-64 overflow-y-auto pr-1">
+                                ${[...CURATED_CATALOG].sort((a, b) => b.vote_average - a.vote_average).slice(0, 10).map((m, idx) => `
+                                    <div onclick="navigate('details', {id: ${m.id}, type: '${m.media_type}'})" class="flex items-center justify-between p-2.5 rounded-xl bg-cinema-surface hover:bg-white/5 cursor-pointer transition">
+                                        <div class="flex items-center gap-3">
+                                            <span class="w-6 text-center font-display font-extrabold text-sm ${idx < 3 ? 'text-amber-400' : 'text-gray-500'}">#${idx + 1}</span>
+                                            <span class="text-sm font-semibold text-white">${m.title}</span>
+                                            <span class="text-[10px] uppercase px-2 py-0.5 rounded bg-white/5 text-gray-400">${m.industry}</span>
+                                        </div>
+                                        <span class="text-xs font-bold text-amber-400">★ ${m.vote_average}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. HEAD-TO-HEAD MOVIE COMPARISON TOOL -->
+                    <section class="bg-cinema-card border border-cinema-border rounded-3xl p-6 sm:p-8">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                            <div>
+                                <span class="text-xs font-bold uppercase text-purple-400">Analytical Breakdown</span>
+                                <h2 class="font-display font-extrabold text-2xl text-white">Head-to-Head Movie Comparison</h2>
+                            </div>
+                            <div class="flex flex-wrap gap-3">
+                                <select onchange="updateComparison(0, this.value)" class="bg-cinema-surface border border-cinema-border rounded-xl px-3 py-2 text-xs text-white">
+                                    ${CURATED_CATALOG.map(m => `<option value="${m.id}" ${m.id === m1.id ? 'selected' : ''}>${m.title}</option>`).join('')}
+                                </select>
+                                <span class="self-center text-xs font-bold text-gray-500">VS</span>
+                                <select onchange="updateComparison(1, this.value)" class="bg-cinema-surface border border-cinema-border rounded-xl px-3 py-2 text-xs text-white">
+                                    ${CURATED_CATALOG.map(m => `<option value="${m.id}" ${m.id === m2.id ? 'selected' : ''}>${m.title}</option>`).join('')}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-3 gap-4 text-center items-center bg-cinema-surface border border-cinema-border rounded-2xl p-5">
+                            <div>
+                                <img src="${m1.poster}" class="w-24 h-36 mx-auto rounded-xl object-cover mb-2" />
+                                <h4 class="font-display font-bold text-white text-sm sm:text-base">${m1.title}</h4>
+                            </div>
+                            <div class="space-y-4 text-xs">
+                                <div>
+                                    <span class="text-gray-400 block">TMDB Rating</span>
+                                    <span class="font-bold text-amber-400 text-sm">${m1.vote_average} vs ${m2.vote_average}</span>
+                                </div>
+                                <div>
+                                    <span class="text-gray-400 block">Runtime</span>
+                                    <span class="font-bold text-white">${m1.runtime}m vs ${m2.runtime}m</span>
+                                </div>
+                                <div>
+                                    <span class="text-gray-400 block">Box Office</span>
+                                    <span class="font-bold text-emerald-400">${formatCurrency(m1.revenue)} vs ${formatCurrency(m2.revenue)}</span>
+                                </div>
+                                <div>
+                                    <span class="text-gray-400 block">Director</span>
+                                    <span class="font-semibold text-purple-300">${m1.director} vs ${m2.director}</span>
+                                </div>
+                            </div>
+                            <div>
+                                <img src="${m2.poster}" class="w-24 h-36 mx-auto rounded-xl object-cover mb-2" />
+                                <h4 class="font-display font-bold text-white text-sm sm:text-base">${m2.title}</h4>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            `;
+        }
+
+        async function runAiRecommendation() {
+            const promptText = document.getElementById('ai-prompt-input')?.value.trim();
+            if (!promptText) {
+                showToast('Enter a mood, genre, or movie idea first!', 'info');
+                return;
+            }
+            const outputEl = document.getElementById('ai-rec-output');
+            const btn = document.getElementById('ai-rec-btn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1.5"></i> Thinking...';
+            outputEl.innerHTML = `<div class="p-4 rounded-2xl bg-cinema-surface border border-cinema-border text-sm text-gray-300 animate-pulse">Analyzing global cinema database & thematic matches...</div>`;
+
+            try {
+                const apiKey = "";
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+                const payload = {
+                    contents: [{
+                        parts: [{
+                            text: `You are CINEVERSE AI, a world-class film historian and recommendation engine. The user asks: "${promptText}". Recommend 3 real, acclaimed movies across global cinema (Hollywood, Bollywood, Tollywood, Korean, or Japanese). For each, give Title, Year, Industry, and a 1-sentence explanation of WHY it fits.`
+                        }]
+                    }]
+                };
+                const res = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (!res.ok) throw new Error('Fallback triggered');
+                const data = await res.json();
+                const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+                if (!reply) throw new Error('Empty AI text');
+
+                outputEl.innerHTML = `
+                    <div class="bg-cinema-surface border border-purple-500/40 rounded-2xl p-5 text-sm text-gray-200 leading-relaxed whitespace-pre-line">
+                        <div class="flex items-center gap-2 text-purple-400 font-bold text-xs uppercase mb-2">
+                            <i class="fa-solid fa-sparkles"></i> Gemini AI Cinema Curations
+                        </div>
+                        ${reply}
+                    </div>
+                `;
+            } catch (e) {
+                // Intelligent Deterministic Fallback Engine
+                const q = promptText.toLowerCase();
+                const matched = CURATED_CATALOG.filter(m =>
+                    m.genres.some(g => q.includes(g.toLowerCase())) ||
+                    q.includes(m.industry) ||
+                    (q.includes('mind') && m.genres.includes('Sci-Fi')) ||
+                    (q.includes('action') && m.genres.includes('Action'))
+                );
+                const picks = (matched.length ? matched : CURATED_CATALOG).slice(0, 3);
+                outputEl.innerHTML = `
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        ${picks.map(p => `
+                            <div onclick="navigate('details', {id: ${p.id}, type: '${p.media_type}'})" class="bg-cinema-surface border border-purple-500/30 rounded-2xl p-4 cursor-pointer hover:border-purple-400 transition">
+                                <span class="text-[10px] font-bold uppercase text-purple-400">${p.industry} &bull; ★ ${p.vote_average}</span>
+                                <h4 class="font-display font-bold text-white text-base mt-1">${p.title} (${p.release_date.slice(0, 4)})</h4>
+                                <p class="text-xs text-gray-300 mt-2"><strong>Why it fits:</strong> Directed by ${p.director}, this ${p.genres.join('/')} standout delivers the exact tone and craftsmanship matching "${promptText}".</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = 'Ask AI Concierge';
+            }
+        }
+
+        function spinRandomMovie() {
+            const pick = CURATED_CATALOG[Math.floor(Math.random() * CURATED_CATALOG.length)];
+            const slot = document.getElementById('random-movie-slot');
+            if (slot) {
+                slot.innerHTML = `
+                    <img src="${pick.poster}" class="w-16 h-24 rounded-xl object-cover" />
+                    <div>
+                        <span class="text-[10px] font-bold uppercase text-purple-400">${pick.industry}</span>
+                        <h4 class="font-display font-bold text-white">${pick.title}</h4>
+                        <p class="text-xs text-gray-400">${pick.genres.join(', ')} &bull; ★ ${pick.vote_average}</p>
+                        <button onclick="navigate('details', {id: ${pick.id}, type: '${pick.media_type}'})" class="mt-2 text-xs font-bold text-purple-400">Open Details &rarr;</button>
+                    </div>
+                `;
+            }
+        }
+
+        function updateComparison(slotIdx, movieId) {
+            STATE.compareSelection[slotIdx] = Number(movieId);
+            renderToolsView(document.getElementById('app-root'));
+        }
+
+        // ==================== 7. ADMIN DASHBOARD (ROLE-BASED) ====================
+        function renderAdminView(root) {
+            if (!STATE.isAuthenticated || STATE.user.role !== 'admin') {
+                root.innerHTML = `
+                    <div class="max-w-lg mx-auto px-4 py-20 text-center">
+                        <div class="bg-cinema-card border border-rose-500/40 rounded-3xl p-8">
+                            <i class="fa-solid fa-shield-halved text-4xl text-rose-400 mb-3"></i>
+                            <h2 class="font-display font-bold text-2xl text-white">Administrator Access Required</h2>
+                            <p class="text-sm text-gray-400 mt-2 mb-6">Role-based access control (RBAC) restricts this dashboard to authorized administrators.</p>
+                            <button onclick="quickAdminDemoLogin(); navigate('admin')" class="gradient-btn px-6 py-3 rounded-xl text-sm font-bold text-white">Sign In as Demo Admin</button>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            root.innerHTML = `
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 animate-fade-in">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div>
+                            <span class="text-xs font-bold uppercase tracking-widest text-emerald-400">RBAC Protected Control Center</span>
+                            <h1 class="font-display font-extrabold text-3xl text-white">CINEVERSE Admin Dashboard</h1>
+                        </div>
+                        <span class="px-3.5 py-1.5 rounded-xl bg-emerald-500/15 border border-emerald-500/40 text-emerald-300 text-xs font-bold">
+                            Active Admin: ${STATE.user.name}
+                        </span>
+                    </div>
+
+                    <!-- KPI STATS -->
+                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div class="bg-cinema-card border border-cinema-border rounded-2xl p-5">
+                            <span class="text-xs text-gray-400">Registered Users</span>
+                            <p class="font-display font-extrabold text-3xl text-white mt-1">14,820</p>
+                            <span class="text-xs text-emerald-400">+12.4% this week</span>
+                        </div>
+                        <div class="bg-cinema-card border border-cinema-border rounded-2xl p-5">
+                            <span class="text-xs text-gray-400">Community Reviews</span>
+                            <p class="font-display font-extrabold text-3xl text-white mt-1">${STATE.reviews.length + 3418}</p>
+                            <span class="text-xs text-blue-400">Moderated & verified</span>
+                        </div>
+                        <div class="bg-cinema-card border border-cinema-border rounded-2xl p-5">
+                            <span class="text-xs text-gray-400">Cached API Entities</span>
+                            <p class="font-display font-extrabold text-3xl text-white mt-1">${STATE.cache.size + CURATED_CATALOG.length}</p>
+                            <span class="text-xs text-purple-400">98.4% cache hit rate</span>
+                        </div>
+                        <div class="bg-cinema-card border border-cinema-border rounded-2xl p-5">
+                            <span class="text-xs text-gray-400">Most Viewed Title</span>
+                            <p class="font-display font-extrabold text-xl text-amber-400 mt-2 truncate">Dune: Part Two</p>
+                            <span class="text-xs text-gray-400">42,910 detail views</span>
+                        </div>
+                    </div>
+
+                    <!-- REVIEW MODERATION & ACTIVITY FEED -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="bg-cinema-card border border-cinema-border rounded-3xl p-6">
+                            <h3 class="font-display font-bold text-lg text-white mb-4">Recent Reviews Moderation</h3>
+                            <div class="space-y-3">
+                                ${STATE.reviews.map(r => `
+                                    <div class="bg-cinema-surface border border-cinema-border rounded-xl p-3.5 flex items-center justify-between gap-3">
+                                        <div>
+                                            <span class="text-xs font-bold text-purple-400">${r.movieTitle} &bull; ${r.userName} (${r.rating}/10)</span>
+                                            <p class="text-xs text-gray-300 mt-1 line-clamp-2">${r.text}</p>
+                                        </div>
+                                        <button onclick="adminDeleteReview('${r.id}')" class="px-3 py-1.5 rounded-lg bg-rose-500/20 hover:bg-rose-500/40 text-rose-300 text-xs font-bold shrink-0">Remove</button>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+
+                        <div class="bg-cinema-card border border-cinema-border rounded-3xl p-6">
+                            <h3 class="font-display font-bold text-lg text-white mb-4">Real-Time Application Activity Logs</h3>
+                            <div class="space-y-2.5 max-h-72 overflow-y-auto">
+                                ${STATE.activityLogs.map(log => `
+                                    <div class="flex items-center justify-between text-xs bg-cinema-surface px-3.5 py-2.5 rounded-xl border border-cinema-border">
+                                        <span class="text-gray-200">${log.event}</span>
+                                        <span class="text-gray-500 shrink-0 ml-2">${log.time}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function adminDeleteReview(revId) {
+            STATE.reviews = STATE.reviews.filter(r => r.id !== revId);
+            logActivity(`Admin removed review ${revId}`);
+            showToast('Review removed by moderator.', 'info');
+            renderAdminView(document.getElementById('app-root'));
+        }
+
+        // ==================== 8. FULL-STACK ARCHITECTURE & DEPLOYMENT BLUEPRINT VIEW ====================
+        function renderAboutView(root) {
+            root.innerHTML = `
+                <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8 animate-fade-in">
+                    <div>
+                        <span class="text-xs font-bold uppercase tracking-widest text-purple-400">Engineering Specification</span>
+                        <h1 class="font-display font-extrabold text-3xl sm:text-4xl text-white mt-1">CINEVERSE Full-Stack Architecture & Setup Guide</h1>
+                        <p class="text-sm text-gray-400 mt-2">Production blueprint covering Python FastAPI/Flask backend, SQLite/PostgreSQL schema, security controls, and TMDB integration.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-cinema-card border border-cinema-border rounded-3xl p-6 space-y-3">
+                            <h3 class="font-display font-bold text-lg text-white"><i class="fa-solid fa-database text-purple-400 mr-2"></i>Normalized Relational Schema</h3>
+                            <ul class="text-xs text-gray-300 space-y-2 font-mono bg-cinema-surface p-4 rounded-2xl border border-cinema-border">
+                                <li>• users (id, email, password_hash, role, created_at)</li>
+                                <li>• movies_cache (tmdb_id PK, payload_json, expires_at)</li>
+                                <li>• watchlists (id, user_id FK, tmdb_id, status, rating)</li>
+                                <li>• reviews (id, user_id FK, tmdb_id, score_1_10, body)</li>
+                                <li>• collections & collection_movies (many-to-many)</li>
+                                <li>• search_history & user_activity (indexed audit logs)</li>
+                            </ul>
+                        </div>
+                        <div class="bg-cinema-card border border-cinema-border rounded-3xl p-6 space-y-3">
+                            <h3 class="font-display font-bold text-lg text-white"><i class="fa-solid fa-shield-halved text-blue-400 mr-2"></i>Security & Performance Controls</h3>
+                            <ul class="text-xs text-gray-300 space-y-2 leading-relaxed">
+                                <li><strong class="text-white">• Auth & Hashing:</strong> Argon2/Bcrypt password hashing + HTTPOnly Secure SameSite session cookies & CSRF tokens.</li>
+                                <li><strong class="text-white">• API Key Protection:</strong> Server-side proxy routes keep <code class="text-purple-300">TMDB_API_KEY</code> out of client bundles.</li>
+                                <li><strong class="text-white">• SQLi & XSS Defense:</strong> Parameterized ORM queries (SQLAlchemy) & strict HTML sanitization.</li>
+                                <li><strong class="text-white">• Caching & Rate Limits:</strong> TTL response caching + sliding-window IP rate limiting.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="bg-cinema-card border border-cinema-border rounded-3xl p-6 space-y-4">
+                        <h3 class="font-display font-bold text-lg text-white">Local Execution & Deployment Steps</h3>
+                        <pre class="bg-cinema-surface border border-cinema-border rounded-2xl p-4 text-xs text-emerald-300 overflow-x-auto"><code># 1. Clone & create virtual environment
+python -m venv venv && source venv/bin/activate
+
+# 2. Install FastAPI / Flask + SQLAlchemy + HTTPX dependencies
+pip install fastapi uvicorn sqlalchemy psycopg2-binary httpx python-dotenv passlib[bcrypt]
+
+# 3. Configure environment variables (.env)
+TMDB_API_KEY=your_tmdb_v3_api_key
+DATABASE_URL=postgresql://user:pass@localhost:5432/cineverse
+SECRET_KEY=super-secret-production-key
+
+# 4. Run production ASGI server
+uvicorn app:app --host 0.0.0.0 --port 8000 --workers 4</code></pre>
+                    </div>
+                </div>
+            `;
+        }
+
+        // ==================== INTERACTIVE ACTIONS & EVENT HANDLERS ====================
+
+        // Live Search Suggestions & History
+        const searchInput = document.getElementById('global-search-input');
+        const searchDropdown = document.getElementById('search-dropdown');
+        const searchDropdownContent = document.getElementById('search-dropdown-content');
+        let searchDebounce = null;
+
+        searchInput.addEventListener('focus', () => {
+            renderSearchDropdown(searchInput.value.trim());
+            searchDropdown.classList.remove('hidden');
+        });
+
+        searchInput.addEventListener('input', (e) => {
+            clearTimeout(searchDebounce);
+            const val = e.target.value.trim();
+            searchDebounce = setTimeout(() => renderSearchDropdown(val), 220);
+        });
+
+        searchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                executeFullSearch();
+            }
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!searchInput.contains(e.target) && !searchDropdown.contains(e.target)) {
+                searchDropdown.classList.add('hidden');
+            }
+        });
+
+        async function renderSearchDropdown(query) {
+            searchDropdown.classList.remove('hidden');
+            if (!query) {
+                searchDropdownContent.innerHTML = `
+                    <div class="flex items-center justify-between px-2 py-1 text-xs text-gray-400">
+                        <span class="font-bold uppercase tracking-wider">Recent Searches</span>
+                        ${STATE.searchHistory.length ? `<button onclick="clearSearchHistory()" class="text-rose-400 hover:underline">Clear History</button>` : ''}
+                    </div>
+                    <div class="flex flex-wrap gap-1.5 p-2">
+                        ${STATE.searchHistory.length ? STATE.searchHistory.map(h => `
+                            <button onclick="searchInput.value='${h}'; executeFullSearch()" class="px-3 py-1 rounded-xl bg-cinema-surface hover:bg-purple-600/30 border border-cinema-border text-xs text-gray-200 transition">
+                                <i class="fa-solid fa-clock-rotate-left text-gray-500 mr-1"></i>${h}
+                            </button>
+                        `).join('') : '<span class="text-xs text-gray-500">No recent searches</span>'}
+                    </div>
+                `;
+                return;
+            }
+
+            let matches = CURATED_CATALOG.filter(m =>
+                m.title.toLowerCase().includes(query.toLowerCase()) ||
+                (m.director || '').toLowerCase().includes(query.toLowerCase())
+            );
+
+            if (STATE.tmdbKey) {
+                const live = await fetchTMDB('/search/multi', { query });
+                if (live?.results?.length) {
+                    matches = live.results
+                        .filter(r => r.media_type === 'movie' || r.media_type === 'tv')
+                        .slice(0, 6)
+                        .map(r => normalizeTmdbItem(r));
+                }
+            }
+
+            if (!matches.length) {
+                searchDropdownContent.innerHTML = `<div class="p-4 text-center text-xs text-gray-400">Press Enter to run deep search for "<strong class="text-white">${query}</strong>"</div>`;
+                return;
+            }
+
+            searchDropdownContent.innerHTML = matches.slice(0, 6).map(m => `
+                <div onclick="searchDropdown.classList.add('hidden'); navigate('details', {id: ${m.id}, type: '${m.media_type}'})" class="flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 cursor-pointer transition">
+                    <img src="${m.poster}" class="w-10 h-14 rounded-lg object-cover shrink-0" />
+                    <div class="flex-1 min-w-0">
+                        <h4 class="text-sm font-bold text-white truncate">${m.title}</h4>
+                        <p class="text-xs text-gray-400">${(m.release_date || '').slice(0, 4)} &bull; ${m.media_type.toUpperCase()} &bull; ★ ${m.vote_average}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function executeFullSearch() {
+            const q = searchInput.value.trim();
+            searchDropdown.classList.add('hidden');
+            if (q && !STATE.searchHistory.includes(q)) {
+                STATE.searchHistory.unshift(q);
+                STATE.searchHistory = STATE.searchHistory.slice(0, 8);
+            }
+            navigate('discover', { query: q });
+        }
+
+        function clearSearchHistory() {
+            STATE.searchHistory = [];
+            renderSearchDropdown('');
+            showToast('Search history cleared.', 'info');
+        }
+
+        // Watchlist & Collections Operations
+        function toggleWatchlist(id, mediaType = 'movie') {
+            if (!STATE.isAuthenticated) {
+                openModal('auth-modal');
+                showToast('Please sign in to save movies to your watchlist.', 'info');
+                return;
+            }
+            const existingIdx = STATE.watchlist.findIndex(w => w.id === id);
+            if (existingIdx > -1) {
+                const removed = STATE.watchlist.splice(existingIdx, 1)[0];
+                showToast(`Removed "${removed.title}" from Watchlist`, 'info');
+                logActivity(`Removed "${removed.title}" from watchlist`);
+            } else {
+                const item = CURATED_CATALOG.find(m => m.id === id) || STATE.recentlyViewed.find(m => m.id === id) || {
+                    id, title: 'Saved Title #' + id, media_type: mediaType, release_date: '2025', vote_average: 8.0,
+                    poster: `https://placehold.co/500x750/181826/a78bfa?text=Title+${id}`, genres: ['Cinema']
+                };
+                STATE.watchlist.unshift({
+                    id: item.id,
+                    title: item.title,
+                    media_type: item.media_type,
+                    year: (item.release_date || '2025').slice(0, 4),
+                    rating: item.vote_average,
+                    poster: item.poster,
+                    genre: item.genres?.[0] || 'Cinema',
+                    watched: false,
+                    personalRating: null
+                });
+                showToast(`Added "${item.title}" to Watchlist!`, 'success');
+                logActivity(`Added "${item.title}" to watchlist`);
+            }
+            updateWatchlistBadge();
+            renderCurrentView();
+        }
+
+        function toggleWatchedStatus(id) {
+            let entry = STATE.watchlist.find(w => w.id === id);
+            if (!entry) {
+                toggleWatchlist(id);
+                entry = STATE.watchlist.find(w => w.id === id);
+            }
+            if (entry) {
+                entry.watched = !entry.watched;
+                showToast(entry.watched ? `Marked "${entry.title}" as Watched!` : `Unmarked "${entry.title}"`, 'success');
+                renderCurrentView();
+            }
+        }
+
+        function updatePersonalRating(id, score) {
+            const entry = STATE.watchlist.find(w => w.id === id);
+            if (entry) {
+                entry.personalRating = score ? Number(score) : null;
+                showToast(`Updated personal rating to ${score}/10`, 'success');
+            }
+        }
+
+        function createNewCollectionPrompt() {
+            const name = prompt('Enter a name for your new custom movie collection (e.g., "Weekend Thrillers"):');
+            if (name && name.trim()) {
+                STATE.collections.push({
+                    id: 'col_' + Date.now(),
+                    name: name.trim(),
+                    movieIds: STATE.watchlist.slice(0, 2).map(w => w.id)
+                });
+                showToast(`Created collection "${name.trim()}"!`, 'success');
+                renderWatchlistView(document.getElementById('app-root'));
+            }
+        }
+
+        function updateWatchlistBadge() {
+            const badge = document.getElementById('watchlist-badge');
+            if (badge) badge.innerText = STATE.watchlist.length;
+        }
+
+        // Reviews Operations
+        function submitMovieReview(e, movieId, movieTitle) {
+            e.preventDefault();
+            if (!STATE.isAuthenticated) {
+                openModal('auth-modal');
+                return;
+            }
+            const rating = Number(document.getElementById('review-score').value);
+            const text = document.getElementById('review-text').value.trim();
+            if (!text) return;
+
+            STATE.reviews.unshift({
+                id: 'rev_' + Date.now(),
+                movieId,
+                movieTitle,
+                userId: STATE.user.id,
+                userName: STATE.user.name,
+                rating,
+                text,
+                date: new Date().toISOString().slice(0, 10)
+            });
+            logActivity(`${STATE.user.name} reviewed "${movieTitle}" (${rating}/10)`);
+            showToast('Your review has been published!', 'success');
+            renderCurrentView();
+        }
+
+        function deleteReview(reviewId) {
+            STATE.reviews = STATE.reviews.filter(r => r.id !== reviewId);
+            showToast('Your review was deleted.', 'info');
+            renderCurrentView();
+        }
+
+        // Trailer Player & Share
+        async function playTrailer(id, title, knownKey = '') {
+            let key = knownKey;
+            if (!key && STATE.tmdbKey) {
+                const vids = await fetchTMDB(`/movie/${id}/videos`);
+                const yt = vids?.results?.find(v => v.site === 'YouTube' && v.type === 'Trailer') || vids?.results?.[0];
+                if (yt) key = yt.key;
+            }
+            document.getElementById('trailer-modal-title').innerText = `${title} — Official Trailer`;
+            const container = document.getElementById('trailer-player-container');
+            if (key) {
+                container.innerHTML = `<iframe class="w-full h-full" src="https://www.youtube.com/embed/${key}?autoplay=1" title="${title} Trailer" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+            } else {
+                container.innerHTML = `
+                    <div class="w-full h-full flex flex-col items-center justify-center p-6 text-center bg-cinema-surface">
+                        <i class="fa-brands fa-youtube text-5xl text-rose-500 mb-3"></i>
+                        <h4 class="font-display font-bold text-lg text-white">Watch "${title}" Trailer on YouTube</h4>
+                        <p class="text-xs text-gray-400 max-w-md mt-1 mb-4">Direct embed key unavailable for this title. Launch official YouTube trailer search below:</p>
+                        <a href="https://www.youtube.com/results?search_query=${encodeURIComponent(title + ' official trailer')}" target="_blank" rel="noopener" class="gradient-btn px-5 py-2.5 rounded-xl text-xs font-bold text-white">
+                            Open Official YouTube Search &rarr;
+                        </a>
+                    </div>
+                `;
+            }
+            openModal('trailer-modal');
+        }
+
+        function shareMovie(title) {
+            const shareText = `Check out "${title}" on CINEVERSE — Ultimate Movie Information Platform!`;
+            const tempInput = document.createElement('input');
+            tempInput.value = shareText;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            showToast(`Copied share link for "${title}" to clipboard!`, 'success');
+        }
+
+        // Modal & API Key Management
+        function openModal(id) {
+            document.getElementById(id)?.classList.remove('hidden');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id)?.classList.add('hidden');
+            if (id === 'trailer-modal') {
+                document.getElementById('trailer-player-container').innerHTML = '';
+            }
+        }
+
+        function toggleMobileMenu() {
+            document.getElementById('mobile-menu')?.classList.toggle('hidden');
+        }
+
+        function saveTmdbKey() {
+            const val = document.getElementById('tmdb-key-input').value.trim();
+            if (!val) {
+                showToast('Please paste a valid TMDB v3 API key.', 'error');
+                return;
+            }
+            STATE.tmdbKey = val;
+            STATE.cache.clear();
+            updateApiStatusUI();
+            closeModal('api-modal');
+            showToast('TMDB Live API connected! Fetching real-time global catalog...', 'success');
+            renderCurrentView();
+        }
+
+        function clearTmdbKey() {
+            STATE.tmdbKey = '';
+            document.getElementById('tmdb-key-input').value = '';
+            updateApiStatusUI();
+            closeModal('api-modal');
+            showToast('Switched to Curated Multi-Industry Mode.', 'info');
+            renderCurrentView();
+        }
+
+        function updateApiStatusUI() {
+            const dot = document.getElementById('api-status-dot');
+            const text = document.getElementById('api-status-text');
+            if (STATE.tmdbKey) {
+                dot.className = 'w-2 h-2 rounded-full bg-emerald-400';
+                text.innerText = 'TMDB Live';
+            } else {
+                dot.className = 'w-2 h-2 rounded-full bg-amber-400';
+                text.innerText = 'API Setup';
+            }
+        }
+
+        // Authentication Handlers
+        let authMode = 'login';
+        function switchAuthTab(mode) {
+            authMode = mode;
+            const nameField = document.getElementById('auth-name-field');
+            const btn = document.getElementById('auth-submit-btn');
+            const tabL = document.getElementById('tab-login');
+            const tabR = document.getElementById('tab-register');
+            if (mode === 'register') {
+                nameField.classList.remove('hidden');
+                btn.innerText = 'Create CINEVERSE Account';
+                tabR.className = 'px-4 py-1.5 rounded-lg text-xs font-bold bg-purple-600 text-white';
+                tabL.className = 'px-4 py-1.5 rounded-lg text-xs font-bold text-gray-400 hover:text-white';
+            } else {
+                nameField.classList.add('hidden');
+                btn.innerText = 'Sign In to CINEVERSE';
+                tabL.className = 'px-4 py-1.5 rounded-lg text-xs font-bold bg-purple-600 text-white';
+                tabR.className = 'px-4 py-1.5 rounded-lg text-xs font-bold text-gray-400 hover:text-white';
+            }
+        }
+
+        function handleAuthSubmit(e) {
+            e.preventDefault();
+            const email = document.getElementById('auth-email').value.trim();
+            const nameInput = document.getElementById('auth-name').value.trim();
+            const displayName = nameInput || email.split('@')[0];
+            STATE.isAuthenticated = true;
+            STATE.user = {
+                id: 'usr_' + Date.now(),
+                name: displayName,
+                email,
+                role: email.includes('admin') ? 'admin' : 'user',
+                avatar: displayName.slice(0, 2).toUpperCase()
+            };
+            updateAuthHeaderUI();
+            closeModal('auth-modal');
+            showToast(`Welcome to CINEVERSE, ${STATE.user.name}!`, 'success');
+            logActivity(`User ${STATE.user.name} authenticated`);
+        }
+
+        function quickAdminDemoLogin() {
+            STATE.isAuthenticated = true;
+            STATE.user = { id: 'usr_demo_01', name: 'Alex Mercer', email: 'admin@cineverse.io', role: 'admin', avatar: 'AM' };
+            updateAuthHeaderUI();
+            closeModal('auth-modal');
+            showToast('Signed in with Administrator privileges.', 'success');
+        }
+
+        function triggerForgotPassword() {
+            showToast('Password reset link sent to your email address.', 'info');
+        }
+
+        function logoutUser() {
+            STATE.isAuthenticated = false;
+            updateAuthHeaderUI();
+            showToast('You have been securely logged out.', 'info');
+            navigate('home');
+        }
+
+        function updateAuthHeaderUI() {
+            const slot = document.getElementById('auth-header-slot');
+            if (!slot) return;
+            if (STATE.isAuthenticated) {
+                slot.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        <button onclick="navigate('admin')" class="flex items-center gap-2 bg-cinema-surface border border-cinema-border hover:border-purple-500 px-2.5 py-1.5 rounded-xl transition" title="User & Admin Profile">
+                            <span class="w-7 h-7 rounded-lg gradient-btn flex items-center justify-center text-xs font-bold text-white">${STATE.user.avatar}</span>
+                            <span class="hidden md:inline text-xs font-semibold text-white">${STATE.user.name}</span>
+                        </button>
+                        <button onclick="logoutUser()" class="p-2 rounded-xl bg-cinema-surface border border-cinema-border hover:border-rose-500 text-gray-400 hover:text-rose-400 text-xs transition" title="Sign Out">
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                        </button>
+                    </div>
+                `;
+            } else {
+                slot.innerHTML = `
+                    <button onclick="openModal('auth-modal')" class="gradient-btn px-4 py-2 rounded-xl text-sm font-semibold text-white shadow">
+                        Sign In
+                    </button>
+                `;
+            }
+        }
+
+        // ==================== INITIALIZE APPLICATION ====================
+        window.addEventListener('DOMContentLoaded', () => {
+            updateWatchlistBadge();
+            updateAuthHeaderUI();
+            updateApiStatusUI();
+            navigate('home');
+        });
+    </script>
+</body>
+</html>
